@@ -1,4 +1,4 @@
-package com.example.paulo.attendly.model;
+package pt.attendly.attendly.model;
 
 /**
  * Created by JOAO on 21/03/2018.

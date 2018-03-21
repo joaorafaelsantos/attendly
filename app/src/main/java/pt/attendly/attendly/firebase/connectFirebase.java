@@ -1,7 +1,5 @@
-package com.example.paulo.attendly.firebase;
+package pt.attendly.attendly.firebase;
 
-import android.net.Uri;
-import android.os.storage.StorageManager;
 import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
@@ -9,10 +7,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-
-import java.io.File;
 
 /**
  * Created by Daniel on 21/03/2018.
