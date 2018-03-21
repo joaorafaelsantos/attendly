@@ -4,12 +4,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
+import android.media.Image;
+import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Environment;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -43,9 +48,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 //                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 //        beaconManager.bind(this);
 
-        
-//        connectFirebase.writeData();
-//        connectFirebase.readData();
     }
 
 
@@ -111,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
         return bluetoothMacAddress;
     }
+
+
 
 
 
