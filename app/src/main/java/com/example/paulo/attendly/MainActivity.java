@@ -43,8 +43,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 //                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
 //        beaconManager.bind(this);
         loadFileList();
-        connectFirebase.writeData();
-        connectFirebase.readData();
+//        connectFirebase.writeData();
+//        connectFirebase.readData();
     }
 
 
