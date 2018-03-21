@@ -2,6 +2,7 @@ package com.example.paulo.attendly;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.DialogInterface;
 import android.nfc.Tag;
 import android.os.Environment;
@@ -22,10 +23,13 @@ import com.example.paulo.attendly.firebase.connectFirebase;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     protected static final String TAG = "MonitoringActivity";
+    protected static final String TAG2 = "MonitoringActivity2";
     private BeaconManager beaconManager;
 
     @Override
@@ -49,29 +53,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         super.onDestroy();
         beaconManager.unbind(this);
     }
-//    @Override
-//    public void onBeaconServiceConnect() {
-//        beaconManager.addMonitorNotifier(new MonitorNotifier() {
-//            @Override
-//            public void didEnterRegion(Region region) {
-//                Log.i(TAG, "I just saw an beacon for the first time!");
-//            }
 //
-//            @Override
-//            public void didExitRegion(Region region) {
-//                Log.i(TAG, "I no longer see an beacon");
-//            }
-//
-//            @Override
-//            public void didDetermineStateForRegion(int state, Region region) {
-//                Log.i(TAG, "I have just switched from seeing/not seeing beacons: "+state);
-//            }
-//        });
-//
-//        try {
-//            beaconManager.startMonitoringBeaconsInRegion(new Region("myMonitoringUniqueId", null, null, null));
-//        } catch (RemoteException e) {    }
-//    }
 
     @Override
     public void onBeaconServiceConnect() {
@@ -80,7 +62,17 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 Log.d(TAG, "BEACONS" + beacons);
                 if (beacons.size() > 0) {
-                    Log.i(TAG, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                    for (Beacon beacon : beacons) {
+                        if (beacon.getDistance() <= 2.0) {
+                            Log.i(TAG2, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                            Log.i(TAG, "The beacon " + beacons.iterator().next().getBluetoothAddress() + " bluetooth");
+
+                        }
+                    }
+
+
+                    Log.i(TAG, "BT Device" + getBluetoothMacAddress());
+
                 }
             }
         });
@@ -89,6 +81,34 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
         } catch (RemoteException e) {
         }
+    }
+
+    private String getBluetoothMacAddress() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        String bluetoothMacAddress = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+            try {
+                Field mServiceField = bluetoothAdapter.getClass().getDeclaredField("mService");
+                mServiceField.setAccessible(true);
+
+                Object btManagerService = mServiceField.get(bluetoothAdapter);
+
+                if (btManagerService != null) {
+                    bluetoothMacAddress = (String) btManagerService.getClass().getMethod("getAddress").invoke(btManagerService);
+                }
+            } catch (NoSuchFieldException e) {
+
+            } catch (NoSuchMethodException e) {
+
+            } catch (IllegalAccessException e) {
+
+            } catch (InvocationTargetException e) {
+
+            }
+        } else {
+            bluetoothMacAddress = bluetoothAdapter.getAddress();
+        }
+        return bluetoothMacAddress;
     }
 
 
