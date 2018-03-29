@@ -10,6 +10,9 @@ public class Schedule {
     private String ending;
     private int day_week;
 
+    public Schedule() {
+    }
+
     public Schedule(int id, String beginning, String ending, int day_week) {
         this.id = id;
         this.beginning = beginning;

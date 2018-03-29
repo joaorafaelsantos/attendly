@@ -11,6 +11,9 @@ public class Subject {
     private int[] schedules;
     private int[] teachers;
 
+    public Subject() {
+    }
+
     public Subject(int id, String name, String course, int[] schedules, int[] teachers) {
         this.id = id;
         this.name = name;

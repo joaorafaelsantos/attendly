@@ -5,7 +5,7 @@ package pt.attendly.attendly.model;
  */
 
 public class Log {
-    private int id;
+    private String id;
     private String id_user;
     private String id_bluetooth;
     private int id_subject;
@@ -14,7 +14,10 @@ public class Log {
     private int presence;
     private int id_classroom;
 
-    public Log(int id, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom) {
+    public Log() {
+    }
+
+    public Log(String id, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom) {
         this.id = id;
         this.id_user = id_user;
         this.id_bluetooth = id_bluetooth;
@@ -25,11 +28,21 @@ public class Log {
         this.id_classroom = id_classroom;
     }
 
-    public int getId() {
+    public Log(String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom) {
+        this.id_user = id_user;
+        this.id_bluetooth = id_bluetooth;
+        this.id_subject = id_subject;
+        this.date = date;
+        this.day_week = day_week;
+        this.presence = presence;
+        this.id_classroom = id_classroom;
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
