@@ -170,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
 
 //                VERIFICAR HORA DA AULA - SE A AULA NÃO TIVER PASSADO (HORA FINAL DA AULA)
                 if (subjectDate.after(currentDate)) {
-                  subjectExists = true;
+                    subjectExists = true;
                     Log.d("XPTO", subjectBeginning);
                     Log.d("XPTO", subjectEnding);
                     Log.d("XPTO", subjectClassroom);
@@ -185,10 +185,6 @@ public class MainActivity extends AppCompatActivity {
 
 //        Log.d("XPTO", String.valueOf(subjectExists));
     }
-
-
-
-
 
 }
 
