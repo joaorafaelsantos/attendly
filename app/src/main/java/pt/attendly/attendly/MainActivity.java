@@ -1,35 +1,106 @@
 package pt.attendly.attendly;
 
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import java.text.ParseException;
+import org.altbeacon.beacon.Beacon;
+import org.altbeacon.beacon.BeaconConsumer;
+import org.altbeacon.beacon.BeaconManager;
+import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.RangeNotifier;
+import org.altbeacon.beacon.Region;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+
 
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BeaconConsumer {
+
+    protected static final String TAG = "MonitoringActivity";
+    protected static final String TAG2 = "MonitoringActivity2";
+    private BeaconManager beaconManager;
+    private String BluetoothMacAddressUser, beaconSala;
+    private boolean presença,tempo, classOpen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        beaconManager = BeaconManager.getInstanceForApplication(this);
+        // To detect proprietary beacons, you must add a line like below corresponding to your beacon
+        // type.  Do a web search for "setBeaconLayout" to get the proper expression.
+        beaconManager.getBeaconParsers().add(new BeaconParser().
+                setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
+        beaconManager.bind(this);
+
         currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        beaconManager.unbind(this);
+    }
+
+    @Override
+    public void onBeaconServiceConnect() {
+        beaconManager.addRangeNotifier(new RangeNotifier() {
+            @Override
+            public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
+                Log.d(TAG,"BEACONS"+beacons);
+                if (beacons.size() > 0) {
+                    for (Beacon beacon: beacons) {
+                        // Obter Beacons que estão a menos de 2.5m
+                        if (beacon.getDistance() <= 2.5) {
+                            // Obter o macaddress do beacon ; verificar qual é o mac address da sala da proxima aula ; comparar os dos mac address
+                            // verificar se o beacon detetado corresponde com o da sala
+                            if (beacons.iterator().next().getBluetoothAddress()==beaconSala){
+                                // verificar se prof abriu a aula
+
+                                if(classOpen== true){
+
+
+
+                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
+                                    if(presença== false){
+
+                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
+                                        if (tempo   == true ){
+
+                                            // registar na base de dados a presença
+                                            // alterar a card principal
+                                        }
+                                    }
+                                }
+                            }
+                            Log.i(TAG2, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                            Log.i(TAG, "The beacon "+beacons.iterator().next().getBluetoothAddress()+" bluetooth");
+                        }
+                    }
+                    Log.i(TAG,"BT Device"+ getBluetoothMacAddress());
+                }
+            }
+        });
+
+        try {
+            beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
+        } catch (RemoteException e) {    }
     }
 
 
@@ -37,6 +108,34 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainTeacherActivity.class);
         intent.putExtra("teste", "teste");
         startActivity(intent);
+    }
+
+    private String getBluetoothMacAddress() {
+        BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        String bluetoothMacAddress = "";
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M){
+            try {
+                Field mServiceField = bluetoothAdapter.getClass().getDeclaredField("mService");
+                mServiceField.setAccessible(true);
+
+                Object btManagerService = mServiceField.get(bluetoothAdapter);
+
+                if (btManagerService != null) {
+                    bluetoothMacAddress = (String) btManagerService.getClass().getMethod("getAddress").invoke(btManagerService);
+                }
+            } catch (NoSuchFieldException e) {
+
+            } catch (NoSuchMethodException e) {
+
+            } catch (IllegalAccessException e) {
+
+            } catch (InvocationTargetException e) {
+
+            }
+        } else {
+            bluetoothMacAddress = bluetoothAdapter.getAddress();
+        }
+        return bluetoothMacAddress;
     }
 
     public void currentCard(String ID) {
