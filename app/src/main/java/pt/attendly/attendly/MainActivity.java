@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.google.firebase.database.DataSnapshot;
@@ -31,10 +30,13 @@ import java.util.Collection;
 import java.util.Date;
 
 
+import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Classroom;
+import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
+import pt.attendly.attendly.model.card;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
@@ -56,6 +58,15 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
 
+        //currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
+        String sub= currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2").get(0).getSubjectName();
+
+        android.util.Log.d("card",sub);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
     }
 
@@ -80,27 +91,30 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             if (beacons.iterator().next().getBluetoothAddress()==beaconSala){
                                 // verificar se prof abriu a aula
 
-                                if(classOpen== true){
+                                Log l= new Log(String id, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom);
 
-
-
-                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
-                                    if(presença== false){
-
-                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
-                                        if (tempo   == true ){
-
-                                            // registar na base de dados a presença
-                                            // alterar a card principal
-                                        }
-                                    }
-                                }
+                                manageData.write("Log", );
+//                                if(classOpen== true){
+//
+//
+//
+//                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
+//                                    if(presença== false){
+//
+//                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
+//                                        if (tempo   == true ){
+//
+//                                            // registar na base de dados a presença
+//                                            // alterar a card principal
+//                                        }
+//                                    }
+//                                }
                             }
-                            Log.i(TAG2, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
-                            Log.i(TAG, "The beacon "+beacons.iterator().next().getBluetoothAddress()+" bluetooth");
+                            android.util.Log.i(TAG2, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                            android.util.Log.i(TAG, "The beacon "+beacons.iterator().next().getBluetoothAddress()+" bluetooth");
                         }
                     }
-                    Log.i(TAG,"BT Device"+ getBluetoothMacAddress());
+                    android.util.Log.i(TAG,"BT Device"+ getBluetoothMacAddress());
                 }
             }
         });
@@ -145,6 +159,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         return bluetoothMacAddress;
     }
 
+<<<<<<< HEAD
     public void currentCard(String ID) {
         final String userID = ID;
         final ArrayList<User> users = new ArrayList<>();
@@ -193,6 +208,37 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                             Classroom classroom = child.getValue(Classroom.class);
                                             classrooms.add(classroom);
                                         }
+=======
+    public static ArrayList<card> currentCard(String ID) {
+        String userID = ID;
+
+        // Hardcode models (replace by firebase data)
+        ArrayList<User> users = new ArrayList<>();
+        int[] exampleSubjects = {0};
+        User u1 = new User("3SGi1vnVujY7y4xsHc07JmBhS9U2", 0, "João", "url", "TSIW", exampleSubjects);
+        User u2 = new User("7ygXxTdPxpNlAiuUE1Dce7naFet1", 0, "Paulo", "url", "TSIW", exampleSubjects);
+        User u3 = new User("BsT8jtyt7HWwtDu6Jq2xcvJZvW02", 0, "Daniel", "url", "TSIW", exampleSubjects);
+        users.add(u1);
+        users.add(u2);
+        users.add(u3);
+        ArrayList<Schedule> schedules = new ArrayList<>();
+        Schedule s1 = new Schedule(0, "11:00", "13:00", 3, 0);
+        Schedule s2 = new Schedule(1, "11:00", "13:00", 4, 0);
+        Schedule s3 = new Schedule(2, "14:00", "18:00", 4, 0);
+        schedules.add(s1);
+        schedules.add(s2);
+        schedules.add(s3);
+        int[] exampleSchedules = {0, 1, 2};
+        int[] exampleTeachers = {3};
+        ArrayList<Subject> subjects = new ArrayList<>();
+        Subject sb1 = new Subject(0, "PDM", "TSIW", exampleSchedules , exampleTeachers);
+        subjects.add(sb1);
+
+        ArrayList<Classroom> classrooms = new ArrayList<>();
+        Classroom c1 = new Classroom(0, "B206", "IDBEACONXPTO");
+        classrooms.add(c1);
+
+>>>>>>> 3493e5a8e36e3b65a03f8eb103f2c35603da292b
 
                                         Log.d("FB", "after all data fb");
                                         User currentUser = new User();
@@ -277,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                                     for (int k = 0; k<subjects.get(j).getSchedules().size(); k++) {
                                                         int tempID = subjects.get(j).getSchedules().get(k);
 
+<<<<<<< HEAD
                                                         if (tempID == tempScheduleID) {
                                                             subjectName = subjects.get(j).getName();
                                                             subjectCourse = subjects.get(j).getCourse();
@@ -286,6 +333,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
 
                                                 }
+=======
+                        if (tempID == tempScheduleID) {
+                            subjectName = subjects.get(j).getName();
+                            subjectCourse = subjects.get(j).getCourse();
+                        }
+                    }
+                }
+>>>>>>> 3493e5a8e36e3b65a03f8eb103f2c35603da292b
 
                                                 Date subjectDate = new Date();
                                                 String[] tempArray = subjectEnding.split(":");
@@ -294,6 +349,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                                 subjectDate.setSeconds(0);
 
 //                VERIFICAR HORA DA AULA - SE A AULA NÃO TIVER PASSADO (HORA FINAL DA AULA)
+<<<<<<< HEAD
                                                 if (subjectDate.after(currentDate)) {
                                                     subjectExists = true;
                                                     Log.d("XPTO", subjectBeginning);
@@ -330,6 +386,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     }
                 });
 
+=======
+                if (subjectDate.after(currentDate)) {
+                    subjectExists = true;
+//                    android.util.Log.d("XPTO", subjectBeginning);
+//                    android.util.Log.d("XPTO", subjectEnding);
+//                    android.util.Log.d("XPTO", subjectClassroom);
+//                    android.util.Log.d("XPTO", subjectName);
+//                    android.util.Log.d("XPTO", subjectBeacon);
+//                    android.util.Log.d("XPTO", subjectCourse);
+                    break;
+                }
+>>>>>>> 3493e5a8e36e3b65a03f8eb103f2c35603da292b
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -370,6 +438,16 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 //
         // Get the current user
 
+<<<<<<< HEAD
+=======
+        }
+//        android.util.Log.d("XPTO", String.valueOf(subjectExists));
+         ArrayList<card> cards = new ArrayList<>();
+        card card = new card(subjectBeginning,subjectEnding,subjectClassroom,subjectName,subjectBeacon,subjectCourse);
+        cards.add(card);
+
+        return cards;
+>>>>>>> 3493e5a8e36e3b65a03f8eb103f2c35603da292b
 
     }
 
