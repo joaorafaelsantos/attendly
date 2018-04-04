@@ -9,8 +9,12 @@ public class Classroom {
     private String name;
     private String id_beacon;
 
+    public Classroom() {
+    }
+
     public Classroom(int id, String name, String id_beacon) {
         this.id = id;
+
         this.name = name;
         this.id_beacon = id_beacon;
     }

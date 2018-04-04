@@ -12,6 +12,9 @@ public class User {
     private String course;
     private int[] subjects;
 
+    public User() {
+    }
+
     public User(String id, int type, String name, String url_picture, String course, int[] subjects) {
         this.id = id;
         this.type = type;

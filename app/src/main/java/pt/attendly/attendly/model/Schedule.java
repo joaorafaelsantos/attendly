@@ -9,12 +9,17 @@ public class Schedule {
     private String beginning;
     private String ending;
     private int day_week;
+    private int classroom;
 
-    public Schedule(int id, String beginning, String ending, int day_week) {
+    public Schedule() {
+    }
+
+    public Schedule(int id, String beginning, String ending, int day_week, int classroom) {
         this.id = id;
         this.beginning = beginning;
         this.ending = ending;
         this.day_week = day_week;
+        this.classroom = classroom;
     }
 
     public int getId() {
@@ -48,4 +53,14 @@ public class Schedule {
     public void setDay_week(int day_week) {
         this.day_week = day_week;
     }
+
+    public int getClassroom() {
+        return classroom;
+    }
+
+    public void setClassroom(int classroom) {
+        this.classroom = classroom;
+    }
+
+
 }
