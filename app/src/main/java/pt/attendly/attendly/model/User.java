@@ -1,5 +1,7 @@
 package pt.attendly.attendly.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by JOAO on 21/03/2018.
  */
@@ -10,12 +12,12 @@ public class User {
     private String name;
     private String url_picture;
     private String course;
-    private int[] subjects;
+    private ArrayList<Integer> subjects;
 
     public User() {
     }
 
-    public User(String id, int type, String name, String url_picture, String course, int[] subjects) {
+    public User(String id, int type, String name, String url_picture, String course, ArrayList<Integer> subjects) {
         this.id = id;
         this.type = type;
         this.name = name;
@@ -64,11 +66,11 @@ public class User {
         this.course = course;
     }
 
-    public int[] getSubjects() {
+    public ArrayList<Integer> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects(int[] subjects) {
+    public void setSubjects(ArrayList<Integer> subjects) {
         this.subjects = subjects;
     }
 

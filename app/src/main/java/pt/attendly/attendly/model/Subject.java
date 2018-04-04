@@ -1,5 +1,7 @@
 package pt.attendly.attendly.model;
 
+import java.util.ArrayList;
+
 /**
  * Created by JOAO on 21/03/2018.
  */
@@ -8,13 +10,13 @@ public class Subject {
     private int id;
     private String name;
     private String course;
-    private int[] schedules;
-    private int[] teachers;
+    private ArrayList<Integer> schedules;
+    private ArrayList<Integer> teachers;
 
     public Subject() {
     }
 
-    public Subject(int id, String name, String course, int[] schedules, int[] teachers) {
+    public Subject(int id, String name, String course, ArrayList<Integer> schedules, ArrayList<Integer> teachers) {
         this.id = id;
         this.name = name;
         this.course = course;
@@ -46,19 +48,19 @@ public class Subject {
         this.course = course;
     }
 
-    public int[] getSchedules() {
+    public ArrayList<Integer> getSchedules() {
         return schedules;
     }
 
-    public void setSchedules(int[] schedules) {
+    public void setSchedules(ArrayList<Integer> schedules) {
         this.schedules = schedules;
     }
 
-    public int[] getTeachers() {
+    public ArrayList<Integer> getTeachers() {
         return teachers;
     }
 
-    public void setTeachers(int[] teachers) {
+    public void setTeachers(ArrayList<Integer> teachers) {
         this.teachers = teachers;
     }
 }
