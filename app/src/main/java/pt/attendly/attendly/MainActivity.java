@@ -58,11 +58,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.bind(this);
 
         currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
-        ArrayList<Log> logs = getLogs("3SGi1vnVujY7y4xsHc07JmBhS9U2");
 
-        for (int i = 0; i<logs.size(); i++) {
-            android.util.Log.d("FB", logs.get(i).getDate());
-        }
     }
 
     @Override
@@ -123,6 +119,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     public void enterLog(View view){
         Intent intent = new Intent(this, MainTeacherActivity.class);
         intent.putExtra("teste", "teste");
+        startActivity(intent);
+    }
+
+    public void openHistoryActivity(View view){
+        Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
 
@@ -390,39 +391,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     }
 
-    public ArrayList<Log> getLogs(String ID) {
-        ArrayList<Integer> exampleSchedules = new ArrayList<>();
-        exampleSchedules.add(0);
-        exampleSchedules.add(1);
-        exampleSchedules.add(2);
-        ArrayList<Integer> exampleTeachers = new ArrayList<>();
-        exampleTeachers.add(3);
-        ArrayList<Subject> subjects = new ArrayList<>();
-        Subject sb1 = new Subject(0, "PDM", "TSIW", exampleSchedules , exampleTeachers);
-
-        ArrayList<Classroom> classrooms = new ArrayList<>();
-        Classroom c1 = new Classroom(0, "B206", "IDBEACONXPTO");
-        classrooms.add(c1);
-
-        ArrayList<Log> logs = new ArrayList<Log>();
-        Log l1 = new Log(ID, "BLUETOOTHID", 0, "28-03-2018", 4, 1, 0);
-        Log l2 = new Log(ID, "BLUETOOTHID", 0, "03-04-2018", 3, 1, 0);
-        Log l3 = new Log("BsT8jtyt7HWwtDu6Jq2xcvJZvW02", "BLUETOOTHID", 0, "04-04-2018", 4, 1, 0);
-        logs.add(l1);
-        logs.add(l2);
-        logs.add(l3);
-
-        ArrayList<Log> userLogs = new ArrayList<Log>();
-
-        for (int i = 0; i<logs.size(); i++) {
-            Log tempLog = logs.get(i);
-            if (tempLog.getId_user().equals(ID)) {
-                userLogs.add(tempLog);
-            }
-        }
-
-        return userLogs;
-    }
 
 
 }
