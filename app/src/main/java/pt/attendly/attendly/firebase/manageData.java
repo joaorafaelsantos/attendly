@@ -29,7 +29,6 @@ public class manageData {
 
         DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(collection);
         String key = myRef.push().getKey();
-
         myRef.child(key).setValue(object);
 
     }

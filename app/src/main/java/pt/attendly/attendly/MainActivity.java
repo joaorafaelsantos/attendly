@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import org.altbeacon.beacon.Beacon;
@@ -24,10 +23,13 @@ import java.util.Collection;
 import java.util.Date;
 
 
+import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Classroom;
+import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
+import pt.attendly.attendly.model.card;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
@@ -49,6 +51,15 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
         beaconManager.bind(this);
 
+        //currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
+        String sub= currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2").get(0).getSubjectName();
+
+        android.util.Log.d("card",sub);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
         currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2");
     }
 
@@ -73,27 +84,30 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             if (beacons.iterator().next().getBluetoothAddress()==beaconSala){
                                 // verificar se prof abriu a aula
 
-                                if(classOpen== true){
+                                Log l= new Log(String id, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom);
 
-
-
-                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
-                                    if(presença== false){
-
-                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
-                                        if (tempo   == true ){
-
-                                            // registar na base de dados a presença
-                                            // alterar a card principal
-                                        }
-                                    }
-                                }
+                                manageData.write("Log", );
+//                                if(classOpen== true){
+//
+//
+//
+//                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
+//                                    if(presença== false){
+//
+//                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
+//                                        if (tempo   == true ){
+//
+//                                            // registar na base de dados a presença
+//                                            // alterar a card principal
+//                                        }
+//                                    }
+//                                }
                             }
-                            Log.i(TAG2, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
-                            Log.i(TAG, "The beacon "+beacons.iterator().next().getBluetoothAddress()+" bluetooth");
+                            android.util.Log.i(TAG2, "The first beacon I see is about "+beacons.iterator().next().getDistance()+" meters away.");
+                            android.util.Log.i(TAG, "The beacon "+beacons.iterator().next().getBluetoothAddress()+" bluetooth");
                         }
                     }
-                    Log.i(TAG,"BT Device"+ getBluetoothMacAddress());
+                    android.util.Log.i(TAG,"BT Device"+ getBluetoothMacAddress());
                 }
             }
         });
@@ -138,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         return bluetoothMacAddress;
     }
 
-    public void currentCard(String ID) {
+    public static ArrayList<card> currentCard(String ID) {
         String userID = ID;
 
         // Hardcode models (replace by firebase data)
@@ -255,10 +269,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             subjectName = subjects.get(j).getName();
                             subjectCourse = subjects.get(j).getCourse();
                         }
-
                     }
-
-
                 }
 
                 Date subjectDate = new Date();
@@ -270,19 +281,24 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 //                VERIFICAR HORA DA AULA - SE A AULA NÃO TIVER PASSADO (HORA FINAL DA AULA)
                 if (subjectDate.after(currentDate)) {
                     subjectExists = true;
-                    Log.d("XPTO", subjectBeginning);
-                    Log.d("XPTO", subjectEnding);
-                    Log.d("XPTO", subjectClassroom);
-                    Log.d("XPTO", subjectName);
-                    Log.d("XPTO", subjectBeacon);
-                    Log.d("XPTO", subjectCourse);
+//                    android.util.Log.d("XPTO", subjectBeginning);
+//                    android.util.Log.d("XPTO", subjectEnding);
+//                    android.util.Log.d("XPTO", subjectClassroom);
+//                    android.util.Log.d("XPTO", subjectName);
+//                    android.util.Log.d("XPTO", subjectBeacon);
+//                    android.util.Log.d("XPTO", subjectCourse);
                     break;
                 }
             }
 
         }
+//        android.util.Log.d("XPTO", String.valueOf(subjectExists));
+         ArrayList<card> cards = new ArrayList<>();
+        card card = new card(subjectBeginning,subjectEnding,subjectClassroom,subjectName,subjectBeacon,subjectCourse);
+        cards.add(card);
 
-//        Log.d("XPTO", String.valueOf(subjectExists));
+        return cards;
+
     }
 
 }
