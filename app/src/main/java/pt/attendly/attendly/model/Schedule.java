@@ -14,7 +14,7 @@ public class Schedule {
     public Schedule() {
     }
 
-    public Schedule(int id, String beginning, String ending, int day_week) {
+    public Schedule(int id, String beginning, String ending, int day_week, int classroom ) {
         this.id = id;
         this.beginning = beginning;
         this.ending = ending;
