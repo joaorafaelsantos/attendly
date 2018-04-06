@@ -5,9 +5,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
-import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Log;
-import pt.attendly.attendly.model.Schedule;
 
 public class MainTeacherActivity extends AppCompatActivity {
 
@@ -22,8 +20,8 @@ public class MainTeacherActivity extends AppCompatActivity {
 //
 //        manageData.write("Log", log);
 
-        ArrayList<Log> logList = manageData.readLog();
-        android.util.Log.d("FB", String.valueOf(logList.get(0).getId_classroom()));
+//        ArrayList<Log> logList = manageData.readLog();
+//        android.util.Log.d("FB", String.valueOf(logList.get(0).getId_classroom()));
 
     }
 }

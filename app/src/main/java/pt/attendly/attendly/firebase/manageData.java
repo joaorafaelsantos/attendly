@@ -1,7 +1,14 @@
 package pt.attendly.attendly.firebase;
 
+import android.app.Activity;
+import android.net.Uri;
 import android.os.Debug;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -9,8 +16,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
+import junit.framework.TestResult;
 
+import java.util.ArrayList;
+import java.util.concurrent.Executor;
+
+import pt.attendly.attendly.MainActivity;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
@@ -23,30 +34,143 @@ import pt.attendly.attendly.model.User;
 
 public class manageData {
 
-    private static StorageReference mStorageRef;
+    public static ArrayList<Classroom> classrooms = new ArrayList<>();
+    public static ArrayList<Log> logs = new ArrayList<>();
+    public static ArrayList<Schedule> schedules = new ArrayList<>();
+    public static ArrayList<Subject> subjects = new ArrayList<>();
+    public static ArrayList<User> users = new ArrayList<>();
 
-    public static void write(String collection, Object object) {
+    static DatabaseReference Classroom_ref = FirebaseDatabase.getInstance().getReference("Classroom");
+    static DatabaseReference Log_ref = FirebaseDatabase.getInstance().getReference("Log");
+    static DatabaseReference Schedule_ref = FirebaseDatabase.getInstance().getReference("Schedule");
+    static DatabaseReference Subject_ref = FirebaseDatabase.getInstance().getReference("Subject");
+    static DatabaseReference User_ref = FirebaseDatabase.getInstance().getReference("User");
 
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference(collection);
-        String key = myRef.push().getKey();
-        myRef.child(key).setValue(object);
+
+    static ValueEventListener VEL_Classroom;
+    static ValueEventListener VEL_Log;
+    static ValueEventListener VEL_Schedule;
+    static ValueEventListener VEL_Subject;
+    static ValueEventListener VEL_User;
+
+    public static void removeAllEventListeners() {
+
+        android.util.Log.d("XPTO", "REMOVE LISTENERS");
+        try {
+            Classroom_ref.removeEventListener(VEL_Classroom);
+        }catch (Exception x)
+        {
+
+        }
+
+        try {
+            Log_ref.removeEventListener(VEL_Log);
+        }catch (Exception x)
+        {
+
+        }
+
+        try {
+            Schedule_ref.removeEventListener(VEL_Schedule);
+        }catch (Exception x)
+        {
+
+        }
+
+        try {
+            Subject_ref.removeEventListener(VEL_Subject);
+        }catch (Exception x)
+        {
+
+        }
+
+        try {
+            User_ref.removeEventListener(VEL_User);
+        }catch (Exception x)
+        {
+
+        }
 
     }
 
+    public static void getMainActivityData(String userId) {
 
-    public static ArrayList<Log> readLog() {
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Log");
-        final ArrayList<Log> logList = new ArrayList<>();
+        removeAllEventListeners();
 
-        myRef.addValueEventListener(new ValueEventListener() {
+        User_ref.child(userId).addValueEventListener(VEL_User = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                users.clear();
+                final User user = dataSnapshot.getValue(User.class);
+                android.util.Log.d("USER", user.getId());
+//                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+//                for (DataSnapshot child : children) {
+//                    User user = child.getValue(User.class);
+//                    android.util.Log.d("USER", user.getId());
+//                    users.add(user);
+//                }
+//
+                Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        subjects.clear();
 
-                for (DataSnapshot child : children) {
-                    Log log = child.getValue(Log.class);
-                    logList.add(log);
-                }
+                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                        for (DataSnapshot child : children) {
+                            Subject subject = child.getValue(Subject.class);
+                            subjects.add(subject);
+                        }
+
+                        Schedule_ref.addValueEventListener(VEL_Schedule = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                schedules.clear();
+
+                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                for (DataSnapshot child : children) {
+                                    Schedule schedule = child.getValue(Schedule.class);
+                                    schedules.add(schedule);
+                                }
+
+                                Classroom_ref.addValueEventListener(VEL_Classroom = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        classrooms.clear();
+
+                                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                        for (DataSnapshot child : children) {
+                                            Classroom classroom = child.getValue(Classroom.class);
+                                            classrooms.add(classroom);
+                                        }
+
+                                        //FUNCTION TO EXECUTE AFTER
+
+                                        MainActivity.currentCard(user);
+                                        android.util.Log.w("XPTO", user.getId());
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
             }
 
             @Override
@@ -55,121 +179,63 @@ public class manageData {
             }
         });
 
-        return logList;
-    }
 
-    public static ArrayList<Schedule> readSchedule() {
-
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Schedule");
-        final ArrayList<Schedule> scheduleList = new ArrayList<>();
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                for (DataSnapshot child : children) {
-                    Schedule schedule = child.getValue(Schedule.class);
-                    scheduleList.add(schedule);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return scheduleList;
 
     }
 
-    public static ArrayList<Classroom> readClassroom() {
-
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Schedule");
-        final ArrayList<Classroom> classroomList = new ArrayList<>();
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                for (DataSnapshot child : children) {
-                    Classroom classroom = child.getValue(Classroom.class);
-                    classroomList.add(classroom);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return classroomList;
-    }
-
-    public static ArrayList<Subject> readSubject() {
-
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Schedule");
-        final ArrayList<Subject> subjectList = new ArrayList<>();
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                for (DataSnapshot child : children) {
-                    Subject subject = child.getValue(Subject.class);
-                    subjectList.add(subject);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return subjectList;
-    }
-
-    public static ArrayList<User> readUser() {
-
-        DatabaseReference myRef = FirebaseDatabase.getInstance().getReference("Schedule");
-        final ArrayList<User> userList = new ArrayList<>();
-
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-
-                for (DataSnapshot child : children) {
-                    User user = child.getValue(User.class);
-                    userList.add(user);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-        return userList;
-    }
-
-
-//    public static void storageTest(){
+//    public static void getHistoryActivityData(String userId) {
 //
-//        mStorageRef = FirebaseStorage.getInstance().getReference();
+//        removeAllEventListeners();
 //
-//        Uri file = Uri.fromFile(new File());
-//        StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
+//        Log_ref.equalTo(userId).addValueEventListener(VEL_Log = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                logs.clear();
+//
+//                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+//                for (DataSnapshot child : children) {
+//                    Log log = child.getValue(Log.class);
+//                    logs.add(log);
+//                }
+//                Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        subjects.clear();
+//
+//                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+//                        for (DataSnapshot child : children) {
+//                            Subject subject = child.getValue(Subject.class);
+//                            subjects.add(subject);
+//                        }
+//
+//                        //FUNCTION TO EXECUTE AFTER
 //
 //
+//                    }
 //
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 //    }
+
+
+    public static void updateUserImage(String userId, Uri image_uri) {
+        User_ref.child(userId).child("url_picture").setValue(image_uri.toString());
+    }
+
+    public static void addLog(Log newLog) {
+        String key = Log_ref.push().getKey();
+        Log_ref.child(key).setValue(newLog);
+    }
 
 
 }

@@ -26,7 +26,7 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="46dp"
+        android:layout_marginBottom="19dp"
         android:onClick="enterLog"
         android:text="Enter TeacherMainActivity"
         app:layout_constraintBottom_toTopOf="@+id/btnHistory"
@@ -38,11 +38,11 @@
         android:id="@+id/btnHistory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="110dp"
+        android:layout_marginBottom="12dp"
         android:layout_marginStart="18dp"
         android:onClick="openHistoryActivity"
         android:text="Enter History Activity"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/button4"
         app:layout_constraintStart_toStartOf="@+id/button2"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
@@ -50,7 +50,7 @@
         android:id="@+id/cardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="28dp"
+        android:layout_marginBottom="27dp"
         app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -82,5 +82,17 @@
             android:layout_height="wrap_content" />
 
     </android.support.v7.widget.CardView>
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="77dp"
+        android:layout_marginStart="35dp"
+        android:onClick="openProfile"
+        android:text="Enter Profile"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/btnHistory"
+        app:layout_constraintTop_toBottomOf="@+id/btnHistory" />
 
 </android.support.constraint.ConstraintLayout>

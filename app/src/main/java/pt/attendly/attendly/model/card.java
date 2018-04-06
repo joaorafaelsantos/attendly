@@ -1,17 +1,11 @@
 package pt.attendly.attendly.model;
 
-import android.util.*;
-
-/**
- * Created by Paulo on 04/04/2018.
- */
-
-public class card {
+public class Card {
 
     private String subjectBeginning,subjectEnding, subjectClassroom,subjectName,subjectBeacon,subjectCourse;
 
 
-    public card(String subjectBeginning, String subjectEnding, String subjectClassroom, String subjectName, String subjectBeacon, String subjectCourse) {
+    public Card(String subjectBeginning, String subjectEnding, String subjectClassroom, String subjectName, String subjectBeacon, String subjectCourse) {
 
         this.subjectBeginning = subjectBeginning;
         this.subjectEnding = subjectEnding;
@@ -69,4 +63,5 @@ public class card {
     public void setSubjectCourse(String subjectCourse) {
         this.subjectCourse = subjectCourse;
     }
+
 }
