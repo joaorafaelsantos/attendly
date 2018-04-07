@@ -12,11 +12,9 @@ public class Log {
     private int day_week;
     private int presence;
     private int id_classroom;
+    private int schedule;
 
-    public Log() {
-    }
-
-    public Log(String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom) {
+    public Log(String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom, int schedule) {
         this.id_user = id_user;
         this.id_bluetooth = id_bluetooth;
         this.id_subject = id_subject;
@@ -24,6 +22,19 @@ public class Log {
         this.day_week = day_week;
         this.presence = presence;
         this.id_classroom = id_classroom;
+        this.schedule = schedule;
+    }
+
+    public Log() {
+    }
+
+    public int getSchedule() {
+
+        return schedule;
+    }
+
+    public void setSchedule(int schedule) {
+        this.schedule = schedule;
     }
 
     public String getId_user() {

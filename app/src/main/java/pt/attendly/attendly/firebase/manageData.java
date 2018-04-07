@@ -1,25 +1,14 @@
 package pt.attendly.attendly.firebase;
 
-import android.app.Activity;
 import android.net.Uri;
-import android.os.Debug;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.StorageReference;
-
-import junit.framework.TestResult;
 
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 
 import pt.attendly.attendly.HistoryActivity;
 import pt.attendly.attendly.MainActivity;
@@ -53,6 +42,8 @@ public class manageData {
     static ValueEventListener VEL_Schedule;
     static ValueEventListener VEL_Subject;
     static ValueEventListener VEL_User;
+
+    static User currentUser = null;
 
     public static void removeAllEventListeners() {
 
@@ -94,6 +85,11 @@ public class manageData {
 
     }
 
+    public static void getAddActivityData(String userId)
+    {
+
+    }
+
     public static void getMainActivityData(String userId) {
 
         removeAllEventListeners();
@@ -103,14 +99,8 @@ public class manageData {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 users.clear();
                 final User user = dataSnapshot.getValue(User.class);
-                android.util.Log.d("USER", user.getId());
-//                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-//                for (DataSnapshot child : children) {
-//                    User user = child.getValue(User.class);
-//                    android.util.Log.d("USER", user.getId());
-//                    users.add(user);
-//                }
-//
+                currentUser = user;
+
                 Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -145,9 +135,7 @@ public class manageData {
                                         }
 
                                         //FUNCTION TO EXECUTE AFTER
-
                                         MainActivity.getCurrentCard(user);
-                                        android.util.Log.w("XPTO", user.getId());
                                     }
 
                                     @Override
@@ -228,7 +216,6 @@ public class manageData {
             }
         });
     }
-
 
     public static void updateUserImage(String userId, Uri image_uri) {
         User_ref.child(userId).child("url_picture").setValue(image_uri.toString());
