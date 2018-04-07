@@ -21,6 +21,7 @@ import junit.framework.TestResult;
 import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
+import pt.attendly.attendly.HistoryActivity;
 import pt.attendly.attendly.MainActivity;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
@@ -183,49 +184,50 @@ public class manageData {
 
     }
 
-//    public static void getHistoryActivityData(String userId) {
-//
-//        removeAllEventListeners();
-//
-//        Log_ref.equalTo(userId).addValueEventListener(VEL_Log = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                logs.clear();
-//
-//                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-//                for (DataSnapshot child : children) {
-//                    Log log = child.getValue(Log.class);
-//                    logs.add(log);
-//                }
-//                Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        subjects.clear();
-//
-//                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-//                        for (DataSnapshot child : children) {
-//                            Subject subject = child.getValue(Subject.class);
-//                            subjects.add(subject);
-//                        }
-//
-//                        //FUNCTION TO EXECUTE AFTER
-//
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+    public static void getHistoryActivityData(String userId) {
+
+        removeAllEventListeners();
+
+        Log_ref.orderByChild("id_user").equalTo(userId).addValueEventListener(VEL_Log = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                logs.clear();
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    Log log = child.getValue(Log.class);
+                    android.util.Log.d("LOGHIS", String.valueOf(log.getDay_week()));
+                    logs.add(log);
+                }
+                Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        subjects.clear();
+
+                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                        for (DataSnapshot child : children) {
+                            Subject subject = child.getValue(Subject.class);
+                            subjects.add(subject);
+                        }
+
+                        //FUNCTION TO EXECUTE AFTER
+                        HistoryActivity.getStudentAttendance();
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
 
 
     public static void updateUserImage(String userId, Uri image_uri) {

@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         setContentView(R.layout.activity_main);
         aula = findViewById(R.id.txtClass);
         cardView = findViewById(R.id.cardView);
+
         manageData.getMainActivityData(userId);
 //        card();
 

@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Subject;
@@ -15,10 +16,10 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-
+        manageData.getHistoryActivityData(MainActivity.userId);
         // Call the methods
-        ArrayList<Log> logs = getLogs("3SGi1vnVujY7y4xsHc07JmBhS9U2");
-        android.util.Log.d("FB", String.valueOf(getStudentAttendance("3SGi1vnVujY7y4xsHc07JmBhS9U2")));
+//        ArrayList<Log> logs = getLogs("3SGi1vnVujY7y4xsHc07JmBhS9U2");
+//        android.util.Log.d("FB", String.valueOf(getStudentAttendance("3SGi1vnVujY7y4xsHc07JmBhS9U2")));
     }
 
     // Method to return all the logs of a user
@@ -57,9 +58,9 @@ public class HistoryActivity extends AppCompatActivity {
     }
 
     // Method to return the attendance of the user
-    public int getStudentAttendance(String id) {
+    public static int getStudentAttendance() {
         // Get the all the user logs
-        ArrayList<Log> userLogs =  getLogs(id);
+        ArrayList<Log> userLogs =  manageData.logs;
 
         // Initiliaze the attendance value with 0
         int attendance = 0;
@@ -71,6 +72,7 @@ public class HistoryActivity extends AppCompatActivity {
 
         // Multiply the attendance by 100 and divide by all the user logs to get the average in percentage
         attendance = (attendance * 100) / userLogs.size();
+        android.util.Log.d("LOGHIS", String.valueOf(attendance));
         return attendance;
     }
 }
