@@ -9,21 +9,43 @@ import java.util.ArrayList;
 public class User {
     private String id;
     private int type;
+    private String email;
+    private String number;
     private String name;
     private String url_picture;
     private String course;
-    private ArrayList<Integer> subjects;
 
-    public User() {
-    }
-
-    public User(String id, int type, String name, String url_picture, String course, ArrayList<Integer> subjects) {
+    public User(String id, int type, String email, String number, String name, String url_picture, String course, ArrayList<Integer> subjects) {
         this.id = id;
         this.type = type;
+        this.email = email;
+        this.number = number;
         this.name = name;
         this.url_picture = url_picture;
         this.course = course;
         this.subjects = subjects;
+    }
+
+    public String getEmail() {
+        return email;
+
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    private ArrayList<Integer> subjects;
+
+    public User() {
     }
 
     public String getId() {
