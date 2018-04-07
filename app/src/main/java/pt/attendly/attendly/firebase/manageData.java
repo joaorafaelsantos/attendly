@@ -146,7 +146,7 @@ public class manageData {
 
                                         //FUNCTION TO EXECUTE AFTER
 
-                                        MainActivity.currentCard(user);
+                                        MainActivity.getCurrentCard(user);
                                         android.util.Log.w("XPTO", user.getId());
                                     }
 
