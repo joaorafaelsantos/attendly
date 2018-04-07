@@ -2,30 +2,78 @@ package pt.attendly.attendly;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.media.Image;
+import android.graphics.BitmapFactory;
+import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 
+import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.firebase.uploadFiles;
+import pt.attendly.attendly.model.User;
 
-public class ProfileActivity extends AppCompatActivity {
+public class ProfileActivity extends AppCompatActivity  {
 
     private static final int PICK_IMAGE_REQUEST = 234;
-    private static final String userId = MainActivity.userId;
     private ImageView imageView;
+    private TextView txtName, txtEmail;
+    static User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         imageView = findViewById(R.id.imageView);
+        txtName = findViewById(R.id.txtName);
+        txtEmail = findViewById(R.id.txtEmail);
+        user = manageData.currentUser;
+        setInfo();
     }
+
+    private void setInfo(){
+        new GetImage().execute();
+        txtName.setText(user.getName());
+        txtEmail.setText(user.getEmail());
+
+    }
+
+    private class GetImage extends AsyncTask<Void, Void, Void> {
+        Bitmap myBitmap = null;
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            try {
+                URL myFileUrl = new URL (user.getUrl_picture());
+                HttpURLConnection conn = (HttpURLConnection) myFileUrl.openConnection();
+                conn.setDoInput(true);
+                conn.connect();
+                InputStream is = conn.getInputStream();
+                myBitmap = BitmapFactory.decodeStream(is);
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+        @Override
+        protected void onPostExecute(Void result)
+        {
+            imageView.setImageBitmap(myBitmap);
+        }
+    }
+
 
     //method to show file chooser
     public void showFileChooser(View view) {
@@ -47,7 +95,7 @@ public class ProfileActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            uploadFiles.upload(this, data.getData(), userId);
+            uploadFiles.upload(this, data.getData(), MainActivity.userId);
         }
     }
 
