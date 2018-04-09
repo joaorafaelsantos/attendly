@@ -1,11 +1,10 @@
-package pt.attendly.attendly.userPref;
+package pt.attendly.attendly.other;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Base64;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
