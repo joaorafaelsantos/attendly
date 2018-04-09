@@ -16,12 +16,5 @@ public class MainTeacherActivity extends AppCompatActivity {
 
 
 
-//        Log log = new Log("7ygXxTdPxpNlAiuUE1Dce7naFet1", "B0:E2:35:9C:3F:B7", 2, "12-12-2017", 4, 0, 0);
-//
-//        manageData.write("Log", log);
-
-//        ArrayList<Log> logList = manageData.readLog();
-//        android.util.Log.d("FB", String.valueOf(logList.get(0).getId_classroom()));
-
     }
 }

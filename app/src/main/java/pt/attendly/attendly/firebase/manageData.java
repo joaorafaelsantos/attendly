@@ -11,6 +11,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 
 import pt.attendly.attendly.HistoryActivity;
+import pt.attendly.attendly.LoginActivity;
 import pt.attendly.attendly.MainActivity;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
@@ -36,106 +37,96 @@ public class manageData {
     static DatabaseReference Subject_ref = FirebaseDatabase.getInstance().getReference("Subject");
     static DatabaseReference User_ref = FirebaseDatabase.getInstance().getReference("User");
 
-
     static ValueEventListener VEL_Classroom;
     static ValueEventListener VEL_Log;
     static ValueEventListener VEL_Schedule;
     static ValueEventListener VEL_Subject;
     static ValueEventListener VEL_User;
 
-    static User currentUser = null;
-
     public static void removeAllEventListeners() {
 
-        android.util.Log.d("XPTO", "REMOVE LISTENERS");
         try {
             Classroom_ref.removeEventListener(VEL_Classroom);
-        }catch (Exception x)
-        {
+        } catch (Exception x) {
 
         }
 
         try {
             Log_ref.removeEventListener(VEL_Log);
-        }catch (Exception x)
-        {
+        } catch (Exception x) {
 
         }
 
         try {
             Schedule_ref.removeEventListener(VEL_Schedule);
-        }catch (Exception x)
-        {
+        } catch (Exception x) {
 
         }
 
         try {
             Subject_ref.removeEventListener(VEL_Subject);
-        }catch (Exception x)
-        {
+        } catch (Exception x) {
 
         }
 
         try {
             User_ref.removeEventListener(VEL_User);
-        }catch (Exception x)
-        {
+        } catch (Exception x) {
 
         }
 
     }
 
-    public static void getAddActivityData(String userId)
-    {
 
-    }
-
-    public static void getMainActivityData(String userId) {
-
+    public static void getAddActivityData() {
         removeAllEventListeners();
 
-        User_ref.child(userId).addValueEventListener(VEL_User = new ValueEventListener() {
+        Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                users.clear();
-                final User user = dataSnapshot.getValue(User.class);
-                currentUser = user;
+                subjects.clear();
 
-                Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    Subject subject = child.getValue(Subject.class);
+                    subjects.add(subject);
+                }
+
+                Schedule_ref.addValueEventListener(VEL_Schedule = new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        subjects.clear();
+                        schedules.clear();
 
                         Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                         for (DataSnapshot child : children) {
-                            Subject subject = child.getValue(Subject.class);
-                            subjects.add(subject);
+                            Schedule schedule = child.getValue(Schedule.class);
+                            schedules.add(schedule);
                         }
 
-                        Schedule_ref.addValueEventListener(VEL_Schedule = new ValueEventListener() {
+                        Log_ref.addValueEventListener(VEL_Log = new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
-                                schedules.clear();
+                                logs.clear();
 
                                 Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                                 for (DataSnapshot child : children) {
-                                    Schedule schedule = child.getValue(Schedule.class);
-                                    schedules.add(schedule);
+                                    Log log = child.getValue(Log.class);
+                                    logs.add(log);
                                 }
 
-                                Classroom_ref.addValueEventListener(VEL_Classroom = new ValueEventListener() {
+                                User_ref.addValueEventListener(VEL_User = new ValueEventListener() {
                                     @Override
                                     public void onDataChange(DataSnapshot dataSnapshot) {
-                                        classrooms.clear();
+                                        users.clear();
 
                                         Iterable<DataSnapshot> children = dataSnapshot.getChildren();
                                         for (DataSnapshot child : children) {
-                                            Classroom classroom = child.getValue(Classroom.class);
-                                            classrooms.add(classroom);
+                                            User user = child.getValue(User.class);
+                                            users.add(user);
                                         }
 
                                         //FUNCTION TO EXECUTE AFTER
-                                        MainActivity.getCurrentCard(user);
+
                                     }
 
                                     @Override
@@ -168,15 +159,183 @@ public class manageData {
             }
         });
 
-
-
     }
 
-    public static void getHistoryActivityData(String userId) {
+    public static void getManagerActivityData() {
+        removeAllEventListeners();
+
+        Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                subjects.clear();
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    Subject subject = child.getValue(Subject.class);
+                    subjects.add(subject);
+                }
+
+                Schedule_ref.addValueEventListener(VEL_Schedule = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        schedules.clear();
+
+                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                        for (DataSnapshot child : children) {
+                            Schedule schedule = child.getValue(Schedule.class);
+                            schedules.add(schedule);
+                        }
+
+                        Log_ref.addValueEventListener(VEL_Log = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                logs.clear();
+
+                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                for (DataSnapshot child : children) {
+                                    Log log = child.getValue(Log.class);
+                                    logs.add(log);
+                                }
+
+                                User_ref.addValueEventListener(VEL_User = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        users.clear();
+
+                                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                        for (DataSnapshot child : children) {
+                                            User user = child.getValue(User.class);
+                                            users.add(user);
+                                        }
+
+                                        //FUNCTION TO EXECUTE AFTER
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getMainActivityData() {
 
         removeAllEventListeners();
 
-        Log_ref.orderByChild("id_user").equalTo(userId).addValueEventListener(VEL_Log = new ValueEventListener() {
+        Subject_ref.addValueEventListener(VEL_Subject = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                subjects.clear();
+
+                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                for (DataSnapshot child : children) {
+                    Subject subject = child.getValue(Subject.class);
+                    subjects.add(subject);
+                }
+
+                Schedule_ref.addValueEventListener(VEL_Schedule = new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        schedules.clear();
+
+                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                        for (DataSnapshot child : children) {
+                            Schedule schedule = child.getValue(Schedule.class);
+                            schedules.add(schedule);
+                        }
+
+                        Classroom_ref.addValueEventListener(VEL_Classroom = new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                classrooms.clear();
+
+                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                for (DataSnapshot child : children) {
+                                    Classroom classroom = child.getValue(Classroom.class);
+                                    classrooms.add(classroom);
+                                }
+
+                                Log_ref.orderByChild("date").addValueEventListener(VEL_Log = new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        logs.clear();
+
+                                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                        for (DataSnapshot child : children) {
+                                            Log log = child.getValue(Log.class);
+                                            logs.add(log);
+                                        }
+
+                                        //FUNCTION TO EXECUTE AFTER
+                                        try {
+                                            MainActivity.getCurrentCard(LoginActivity.loggedUser);
+                                        } catch (Exception e) {
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                });
+
+
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public static void getHistoryActivityData() {
+
+        removeAllEventListeners();
+
+        Log_ref.orderByChild("id_user").equalTo(LoginActivity.loggedUser.getId()).addValueEventListener(VEL_Log = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 logs.clear();
@@ -199,7 +358,12 @@ public class manageData {
                         }
 
                         //FUNCTION TO EXECUTE AFTER
-                        HistoryActivity.getStudentAttendance();
+                        try {
+                            HistoryActivity.getStudentAttendance();
+                        } catch (Exception e) {
+
+                        }
+
 
                     }
 
@@ -217,8 +381,9 @@ public class manageData {
         });
     }
 
-    public static void updateUserImage(String userId, Uri image_uri) {
-        User_ref.child(userId).child("url_picture").setValue(image_uri.toString());
+
+    public static void updateUserImage(Uri image_uri) {
+        User_ref.child(LoginActivity.loggedUser.getId()).child("url_picture").setValue(image_uri.toString());
     }
 
     public static void addLog(Log newLog) {

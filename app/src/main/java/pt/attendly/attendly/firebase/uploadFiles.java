@@ -14,6 +14,9 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import pt.attendly.attendly.LoginActivity;
+import pt.attendly.attendly.MainActivity;
+
 /**
  * Created by Daniel on 05/04/2018.
  */
@@ -22,13 +25,13 @@ public class uploadFiles {
 
     private static StorageReference storageReference = FirebaseStorage.getInstance().getReference();
 
-    public static void upload(final Context con, Uri filePath, final String userId){
+    public static void upload(final Context con, Uri filePath){
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(con);
             progressDialog.setTitle("Uploading");
             progressDialog.show();
 
-            StorageReference riversRef = storageReference.child(userId);
+            StorageReference riversRef = storageReference.child(LoginActivity.loggedUser.getId());
             riversRef.putFile(filePath)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
@@ -38,7 +41,7 @@ public class uploadFiles {
                             progressDialog.dismiss();
 
                             Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            manageData.updateUserImage(userId, downloadUrl);
+                            manageData.updateUserImage(downloadUrl);
 
                             //and displaying a success toast
                             Toast.makeText(con.getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();

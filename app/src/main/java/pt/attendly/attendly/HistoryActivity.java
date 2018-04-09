@@ -16,7 +16,7 @@ public class HistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
-        manageData.getHistoryActivityData(MainActivity.userId);
+        manageData.getHistoryActivityData();
         // Call the methods
 //        ArrayList<Log> logs = getLogs("3SGi1vnVujY7y4xsHc07JmBhS9U2");
 //        android.util.Log.d("FB", String.valueOf(getStudentAttendance("3SGi1vnVujY7y4xsHc07JmBhS9U2")));
@@ -37,12 +37,12 @@ public class HistoryActivity extends AppCompatActivity {
         Classroom c1 = new Classroom(0, "B206", "IDBEACONXPTO");
         classrooms.add(c1);
         ArrayList<Log> logs = new ArrayList<Log>();
-        Log l1 = new Log(ID, "BLUETOOTHID", 0, "28-03-2018", 4, 1, 0);
-        Log l2 = new Log(ID, "BLUETOOTHID", 0, "03-04-2018", 3, 0, 0);
-        Log l3 = new Log("BsT8jtyt7HWwtDu6Jq2xcvJZvW02", "BLUETOOTHID", 0, "04-04-2018", 4, 1, 0);
-        logs.add(l1);
-        logs.add(l2);
-        logs.add(l3);
+//        Log l1 = new Log(ID, "BLUETOOTHID", 0, "28-03-2018", 4, 1, 0);
+//        Log l2 = new Log(ID, "BLUETOOTHID", 0, "03-04-2018", 3, 0, 0);
+//        Log l3 = new Log("BsT8jtyt7HWwtDu6Jq2xcvJZvW02", "BLUETOOTHID", 0, "04-04-2018", 4, 1, 0);
+//        logs.add(l1);
+//        logs.add(l2);
+//        logs.add(l3);
 
         // For every log only adds the user ones
         ArrayList<Log> userLogs = new ArrayList<Log>();
@@ -71,7 +71,14 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         // Multiply the attendance by 100 and divide by all the user logs to get the average in percentage
-        attendance = (attendance * 100) / userLogs.size();
+        try{
+            attendance = (attendance * 100) / userLogs.size();
+        }
+        catch (Exception e)
+        {
+
+        }
+
         android.util.Log.d("LOGHIS", String.valueOf(attendance));
         return attendance;
     }

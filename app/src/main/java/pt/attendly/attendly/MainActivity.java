@@ -58,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     static boolean subjectExists = false, noClass = false;
 
-    public static String userId = "0";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,8 +65,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         aula = findViewById(R.id.txtClass);
         cardView = findViewById(R.id.cardView);
 
-        manageData.getMainActivityData(userId);
-//        card();
+        manageData.getMainActivityData();
 
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // To detect proprietary beacons, you must add a line like below corresponding to your beacon
@@ -79,32 +76,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
 
     }
-
-
-
-//    private void card() {
-//        currentCard("3SGi1vnVujY7y4xsHc07JmBhS9U2", new OnGetDataListener() {
-//
-//
-//            @Override
-//            public void onStart() {
-//                android.util.Log.d("aca1", "aca");
-//                cardView.setVisibility(View.INVISIBLE);
-//            }
-//
-//            @Override
-//            public void onSuccess(DataSnapshot data) {
-//                android.util.Log.d("aca", "aca");
-//                aula.setText(cards.get(0).getSubjectName());
-//                cardView.setVisibility(View.VISIBLE);
-//            }
-//
-//            @Override
-//            public void onFailed(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
 
 
     @Override
@@ -178,8 +149,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         startActivity(intent);
     }
 
-    public void openProfile(View view)
-    {
+    public void openProfile(View view) {
         Intent intent = new Intent(this, ProfileActivity.class);
         startActivity(intent);
     }
@@ -344,6 +314,13 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         cards.add(card);
         aula.setText(cards.get(0).getSubjectName());
 
+    }
+
+
+    //DISABLE BACK BUTTON PRESS TO PREVIOUS ACTIVITY
+    @Override
+    public void onBackPressed() {
+//        this.finishAffinity();
     }
 
 
