@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import pt.attendly.attendly.HistoryActivity;
 import pt.attendly.attendly.LoginActivity;
 import pt.attendly.attendly.MainActivity;
+import pt.attendly.attendly.ManagerActivity;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
@@ -208,7 +209,7 @@ public class manageData {
                                             users.add(user);
                                         }
 
-                                        //FUNCTION TO EXECUTE AFTER
+                                        ManagerActivity.getCurrentStudents();
 
                                     }
 

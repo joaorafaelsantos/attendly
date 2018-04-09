@@ -154,6 +154,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         startActivity(intent);
     }
 
+    public void openManagerClass(View view) {
+        Intent intent = new Intent(this, ManagerActivity.class);
+        startActivity(intent);
+    }
+
     private String getBluetoothMacAddress() {
         BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         String bluetoothMacAddress = "";
@@ -234,6 +239,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         String subjectName = "";
         String subjectBeacon = "";
         String subjectCourse = "";
+        int subjectSchedule = -1;
 
         // System flag variables
         int totalClasses = 0, pastClasses = 0;
@@ -250,6 +256,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 // Add the data to the card variables
                 subjectBeginning = userSchedules.get(i).getBeginning();
                 subjectEnding = userSchedules.get(i).getEnding();
+                subjectSchedule = userSchedules.get(i).getId();
 
                 int tempClassroomID = userSchedules.get(i).getClassroom();
 
@@ -310,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         read = true;
         android.util.Log.d("card2", String.valueOf(read));
         cards.clear();
-        Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse);
+        Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule);
         cards.add(card);
         aula.setText(cards.get(0).getSubjectName());
 

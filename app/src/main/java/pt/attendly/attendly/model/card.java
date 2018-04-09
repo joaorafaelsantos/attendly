@@ -3,9 +3,10 @@ package pt.attendly.attendly.model;
 public class Card {
 
     private String subjectBeginning,subjectEnding, subjectClassroom,subjectName,subjectBeacon,subjectCourse;
+    private int subjectSchedule;
 
 
-    public Card(String subjectBeginning, String subjectEnding, String subjectClassroom, String subjectName, String subjectBeacon, String subjectCourse) {
+    public Card(String subjectBeginning, String subjectEnding, String subjectClassroom, String subjectName, String subjectBeacon, String subjectCourse, int subjectSchedule) {
 
         this.subjectBeginning = subjectBeginning;
         this.subjectEnding = subjectEnding;
@@ -13,6 +14,7 @@ public class Card {
         this.subjectName = subjectName;
         this.subjectBeacon = subjectBeacon;
         this.subjectCourse = subjectCourse;
+        this.subjectSchedule = subjectSchedule;
     }
 
 
@@ -62,6 +64,14 @@ public class Card {
 
     public void setSubjectCourse(String subjectCourse) {
         this.subjectCourse = subjectCourse;
+    }
+
+    public int getSubjectSchedule() {
+        return subjectSchedule;
+    }
+
+    public void setSubjectSchedule(int subjectSchedule) {
+        this.subjectSchedule = subjectSchedule;
     }
 
 }
