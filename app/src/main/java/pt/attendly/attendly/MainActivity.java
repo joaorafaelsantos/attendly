@@ -19,6 +19,7 @@ import org.altbeacon.beacon.Region;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -28,6 +29,7 @@ import java.util.Date;
 import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Card;
 import pt.attendly.attendly.model.Classroom;
+import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
