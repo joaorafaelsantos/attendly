@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private boolean presença, tempo, classOpen;
     static boolean read = false;
 
+
+
     static ArrayList<Card> cards = new ArrayList<>();
     static TextView aula;
     TextView sala;
@@ -512,7 +514,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
         read = true;
         data = true;
-//        updateCardTimer.start();
+        if(isCardTimerRunning == false)
+        {
+            updateCardTimer.start();
+            isCardTimerRunning = true;
+        }
+
     }
 
     private static void verifyPresence() throws ParseException {
@@ -520,6 +527,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         boolean runTimer = true;
 
         final ArrayList<Log> logs = manageData.logs;
+
 
         boolean logRegistered = false;
         int presence = 0;
@@ -532,16 +540,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         for (Log log : logs) {
 
             String[] date = log.getDate().split(" ");
-
-//            android.util.Log.d("TIMEDONE", date[0]);
-//            android.util.Log.d("TIMEDONE", dataFormated);
-//            android.util.Log.d("TIMEDONE", log.getId_user());
-//            android.util.Log.d("TIMEDONE", LoginActivity.loggedUser.getId());
-//            android.util.Log.d("TIMEDONE", String.valueOf(log.getId_schedule()));
-//            android.util.Log.d("TIMEDONE", String.valueOf(cards.get(0).getSubjectSchedule()));
-//            android.util.Log.d("TIMEDONE", String.valueOf(log.getId_subject()));
-//            android.util.Log.d("TIMEDONE", String.valueOf(cards.get(0).getSubjectId()));
-
             if (date[0].equals(dataFormated)
                     && log.getId_user().equals(LoginActivity.loggedUser.getId())
                     && log.getId_schedule() == cards.get(0).getSubjectSchedule()
@@ -551,8 +549,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 presence = log.getPresence();
 
             }
-        }
 
+        }
+        android.util.Log.d("TIMEDONE", "go");
         if (logRegistered) {
             if (presence == 1) {
                 //PUT GREEN LOGO AND DO WHATEVER
@@ -588,16 +587,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             Date nowTime = df.parse(temp);
             long elapsed = absenceTime.getTime() - nowTime.getTime();
 
-            android.util.Log.d("TIMEDONE", String.valueOf(absenceTime.getTime()));
-            android.util.Log.d("TIMEDONE", String.valueOf(nowTime.getTime()));
-            android.util.Log.d("TIMEDONE", String.valueOf(elapsed));
-            elapsed = -1;
             if (elapsed <= 0) {
                 runTimer = false;
 
                 //REGISTER ABSENCE
                 Date currentDate2 = new Date();
-                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String date = simpleDateFormat2.format(currentDate2);
                 Calendar c = Calendar.getInstance();
                 c.setTime(currentDate2);
@@ -613,56 +608,66 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 }
 
                 Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
-//                manageData.addLog(log);
+                manageData.addLog(log);
             }
-            android.util.Log.d("TIMEDONE", String.valueOf(runTimer));
-//            if(runTimer)
-//            {
-//                checkAbsenceTimer.start();
-//            }
-//            else
-//            {
-//                checkAbsenceTimer.cancel();
-//            }
+            if(runTimer)
+            {
+                if(isAbsenceTimerRunning == false)
+                {
+                    checkAbsenceTimer.start();
+                    isAbsenceTimerRunning = true;
+                }
 
+            }
+            else
+            {
+                if(isAbsenceTimerRunning == true)
+                {
+                    isAbsenceTimerRunning = false;
+                }
+
+
+            }
 
         }
 
     }
 
+    static boolean isAbsenceTimerRunning = false;
+    static boolean isCardTimerRunning = false;
 
-//    static CountDownTimer checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
-//        @Override
-//        public void onTick(long l) {
-//            android.util.Log.d("TIMEDONE", "ABSENCE TIMER RUNNING");
-//        }
-//
-//        @Override
-//        public void onFinish() {
-//
-//            try {
-//                verifyPresence();
-//            } catch (ParseException e) {
-//                e.printStackTrace();
-//            }
-//            start();
-//        }
-//    };
-//
-//    static CountDownTimer updateCardTimer = new CountDownTimer(60000 * 1, 60000 * 1) {
-//        @Override
-//        public void onTick(long l) {
-//            android.util.Log.d("TIMEDONE", "CARD TIMER RUNNING");
-//        }
-//
-//        @Override
-//        public void onFinish() {
-//
-//            getCurrentCard();
-//
-//            start();
-//        }
-//    };
+    static final CountDownTimer checkAbsenceTimer = new CountDownTimer(59000, 59000) {
+        @Override
+        public void onTick(long l) {
+            android.util.Log.d("TIMEDONE", "ABSENCE TIMER RUNNING");
+        }
+
+        @Override
+        public void onFinish() {
+
+            try {
+                verifyPresence();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            start();
+        }
+    };
+
+    static final CountDownTimer updateCardTimer = new CountDownTimer(60000 * 30, 60000 * 30) {
+        @Override
+        public void onTick(long l) {
+            android.util.Log.d("TIMEDONE", "CARD TIMER RUNNING");
+        }
+
+        @Override
+        public void onFinish() {
+
+            getCurrentCard();
+
+            start();
+        }
+    };
 
 
     //DISABLE BACK BUTTON PRESS TO PREVIOUS ACTIVITY
