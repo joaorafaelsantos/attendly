@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     static TextView aula;
     TextView sala;
     CardView cardView;
+    private static boolean data = false;
+
+    static CountDownTimer checkAbsenceTimer;
 
     static boolean subjectExists = false, noClass = false;
 
@@ -69,12 +72,154 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         beaconManager.unbind(this);
     }
+
+    public static boolean checkIfTimeOfClass(String classBegining, String classEnd) {
+        boolean time = false;
+        final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
+        Date begining = new Date();
+        String[] tempArray = classBegining.split(":");
+        begining.setHours(Integer.parseInt(tempArray[0]));
+        begining.setMinutes(Integer.parseInt(tempArray[1]));
+        begining.setSeconds(0);
+
+        Date now = new Date();
+
+        Date tolerance = new Date(begining.getTime() + 15 * 60 * 1000);
+
+        android.util.Log.d("tolerance", String.valueOf(tolerance));
+
+        if (begining.before(now) && tolerance.after(now)) {
+            time = true;
+        }
+        return time;
+    }
+
+    public static boolean checkIfClassOpen(String classBegining, String classEnd) {
+        boolean open = false;
+        android.util.Log.d("enter", "enter");
+
+        ArrayList<Log> arrayLogs = manageData.logs;
+        ArrayList<Schedule> arraySchedule = manageData.schedules;
+        ArrayList<User> arrayListUsers = manageData.users;
+        ArrayList<Log> tempUsersClass;
+
+
+        for (int i = 0; i < arrayLogs.size(); i++) {
+            for (int j = 0; j < arrayListUsers.size(); j++) {
+                // Verificar se o profesor já abriu a aula
+                if (arrayLogs.get(i).getId_user().equals(arrayListUsers.get(j).getId())) {
+                    android.util.Log.d("user", arrayListUsers.get(j).getId());
+                    // verificar os registos dos profs
+                    if (arrayListUsers.get(j).getType() == 1) {
+                        android.util.Log.d("user2", arrayListUsers.get(j).getId());
+                        // Qual é a cadeira que foi registada
+                        for (int k = 0; k < arrayListUsers.get(j).getSubjects().size(); k++) {
+                            // verificar se está na lista as cadeiras dos prof
+                            if (arrayLogs.get(i).getId_subject() == (arrayListUsers.get(j).getSubjects().get(k))) {
+                                // verificar a que horas foi feito o registo
+                                Date begining = new Date();
+                                String[] tempArray = classBegining.split(":");
+                                begining.setHours(Integer.parseInt(tempArray[0]));
+                                begining.setMinutes(Integer.parseInt(tempArray[1]));
+                                begining.setSeconds(0);
+
+                                Date tolerance = new Date(begining.getTime() + 15 * 60 * 1000);
+
+                                String dateLog = arrayLogs.get(i).getDate();
+                                Date log = ManagerActivity.parseDate(dateLog);
+                                Date now = new Date();
+                                android.util.Log.d("user4", String.valueOf(log));
+                                android.util.Log.d("user5", String.valueOf(now));
+                                android.util.Log.d("user6", cards.get(0).getSubjectBeginning());
+
+                                if (log.after(begining) && log.before(tolerance)) {
+                                    open = true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        android.util.Log.d("bl1", String.valueOf(open));
+        return open;
+    }
+
+    public static boolean checkBluetooth(String classBegining, String bluetoothId) {
+        boolean bluetooth = false;
+        android.util.Log.d("enter", "enter");
+
+        ArrayList<Log> arrayLogs = manageData.logs;
+        ArrayList<Schedule> arraySchedule = manageData.schedules;
+        ArrayList<User> arrayListUsers = manageData.users;
+        ArrayList<Log> tempUsersClass;
+
+
+        for (int i = 0; i < arrayLogs.size(); i++) {
+
+            if (arrayLogs.get(i).getId_bluetooth().equals(bluetoothId)) {
+
+                // verificar a que horas foi feito o registo
+                Date begining = new Date();
+                String[] tempArray = classBegining.split(":");
+                begining.setHours(Integer.parseInt(tempArray[0]));
+                begining.setMinutes(Integer.parseInt(tempArray[1]));
+                begining.setSeconds(0);
+
+                Date tolerance = new Date(begining.getTime() + 15 * 60 * 1000);
+                String dateLog = arrayLogs.get(i).getDate();
+                Date log = ManagerActivity.parseDate(dateLog);
+
+                if (log.after(begining) && log.before(tolerance)) {
+                    bluetooth = true;
+                }
+
+            }
+
+        }
+        android.util.Log.d("bl", String.valueOf(bluetooth));
+
+        return bluetooth;
+    }
+
+    public static boolean missClass(String classBegining, String userId) {
+        boolean miss = false;
+        android.util.Log.d("enter", "enter");
+
+        ArrayList<Log> arrayLogs = manageData.logs;
+        ArrayList<Schedule> arraySchedule = manageData.schedules;
+        ArrayList<User> arrayListUsers = manageData.users;
+        ArrayList<Log> tempUsersClass;
+
+
+        for (int i = 0; i < arrayLogs.size(); i++) {
+            if (arrayLogs.get(i).getId_user().equals(userId)) {
+                // verificar a que horas foi feito o registo
+                Date begining = new Date();
+                String[] tempArray = classBegining.split(":");
+                begining.setHours(Integer.parseInt(tempArray[0]));
+                begining.setMinutes(Integer.parseInt(tempArray[1]));
+                begining.setSeconds(0);
+
+                Date tolerance = new Date(begining.getTime() + 15 * 60 * 1000);
+                String dateLog = arrayLogs.get(i).getDate();
+                Date log = ManagerActivity.parseDate(dateLog);
+                if (log.after(begining) && log.before(tolerance)) {
+                    if (arrayLogs.get(i).getPresence() == 0) {
+                        miss = true;
+                    }
+                }
+            }
+        }
+        android.util.Log.d("bl2", String.valueOf(miss));
+        return miss;
+    }
+
 
     @Override
     public void onBeaconServiceConnect() {
@@ -84,52 +229,69 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
                 android.util.Log.d(TAG, "BEACONS" + beacons);
                 if (beacons.size() > 0) {
+                    String bluetooth = getBluetoothMacAddress();
 
-                    if (cards.size() > 0) {
-                        android.util.Log.d("card", String.valueOf(cards.get(0).getSubjectName()));
-                    }
                     for (Beacon beacon : beacons) {
                         // Obter Beacons que estão a menos de 2.5m
                         if (beacon.getDistance() <= 2.5) {
                             // Obter o macaddress do beacon ; verificar qual é o mac address da sala da proxima aula ; comparar os dos mac address
                             // verificar se o beacon detetado corresponde com o da sala
-                            if (beacons.iterator().next().getBluetoothAddress() == beaconSala) {
+                            if (beacons.iterator().next().getBluetoothAddress().equals("C1:BA:B4:A2:1C:B3")) {
                                 // verificar se prof abriu a aula
+                                android.util.Log.d("d", String.valueOf(data));
+                                if (data == true) {
+                                    if (cards.size() > 0) {
+                                        String begining = cards.get(0).getSubjectBeginning();
+                                        String end = cards.get(0).getSubjectEnding();
+                                        // Verificar se está na hora da aula
+                                        if (checkIfTimeOfClass(begining, end) == true) {
 
-//                                Log l= new Log(String id, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom);
+                                            // Verificar se a aula está aberta
+                                            if (checkIfClassOpen(begining, end) == true) {
 
-                                //manageData.write("Log", );
-//                                if(classOpen== true){
-//
-//
-//
-//                                    // se coincidirem  verificar se já tiver falta não pode marcar presença
-//                                    if(presença== false){
-//
-//                                        // caso não tenha falta verificar se está dentro do tempo para marcar presença, caso contrário não faz nada
-//                                        if (tempo   == true ){
-//
-//                                            // registar na base de dados a presença
-//                                            // alterar a card principal
-//                                        }
-//                                    }
-//                                }
+                                                // verificar se o bluethooth não foi registo naquela aula
+                                                if (checkBluetooth(begining, bluetooth) == false) {
+
+                                                    //verificar se não tem falta
+                                                    if (missClass(begining, LoginActivity.loggedUser.getId()) == false) {
+                                                        // registar
+                                                        String date = String.valueOf(new Date());
+                                                        String idUser = LoginActivity.loggedUser.getId();
+
+
+                                                        //obter id_Subject, dayOfWeek, id_Classroom, id_Schedule
+
+
+                                                        Log log = new Log(idUser, bluetooth, 0, date, 0, 1, 0, 0);
+                                                        manageData.addLog(log);
+
+
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                android.util.Log.i(TAG2, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                                android.util.Log.i(TAG, "The beacon " + beacons.iterator().next().getBluetoothAddress() + " bluetooth");
                             }
-                            android.util.Log.i(TAG2, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
-                            android.util.Log.i(TAG, "The beacon " + beacons.iterator().next().getBluetoothAddress() + " bluetooth");
                         }
+                        android.util.Log.i(TAG, "BT Device" + getBluetoothMacAddress());
                     }
-                    android.util.Log.i(TAG, "BT Device" + getBluetoothMacAddress());
                 }
             }
         });
 
-        try {
+        try
+
+        {
             beaconManager.startRangingBeaconsInRegion(new Region("myRangingUniqueId", null, null, null));
-        } catch (RemoteException e) {
+        } catch (
+                RemoteException e)
+
+        {
         }
     }
-
 
     public void openTeacherActivity(View view) {
         Intent intent = new Intent(this, MainTeacherActivity.class);
@@ -181,6 +343,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     // Method to return the current card (with the current or the next subject of that day)
     public static void getCurrentCard() {
+
+        data = false;
         // Load the data
         User currentUser = LoginActivity.loggedUser;
         final ArrayList<User> users = manageData.users;
@@ -306,27 +470,102 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
 
         // If the number of classes is the same than the classes that already happend then there aren't more classes on that day
+        // If the number of classes is the same than the classes that already happend then there aren't more classes on that day
         if (totalClasses == pastClasses) {
             android.util.Log.d("count", String.valueOf(pastClasses));
             android.util.Log.d("count1", String.valueOf(totalClasses));
             android.util.Log.d("count", "No more classes today");
-        }
-        read = true;
-        android.util.Log.d("card2", String.valueOf(read));
-        cards.clear();
-
-
-        if (cards.size() == 0) {
-            aula.setText("Não tem mais aulas!");
+            aula.setText("Não tem aula");
         } else {
-            Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule, subject_id, classroom_id);
+            android.util.Log.d("card2", String.valueOf(read));
+            cards.clear();
+            Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule,0,0);
             cards.add(card);
             aula.setText(cards.get(0).getSubjectName());
+
+            String begining = cards.get(0).getSubjectBeginning();
+            String end = cards.get(0).getSubjectEnding();
+            android.util.Log.d("bool", String.valueOf(checkIfTimeOfClass(begining, end)));
+
+            verifyPresence();
         }
+        read = true;
+        data = true;
+
         updateCardTimer.start();
     }
 
-    static CountDownTimer updateCardTimer = new CountDownTimer(60000*30, 60000*30) {
+    private static void verifyPresence() {
+
+        final ArrayList<Log> logs = manageData.logs;
+
+        boolean logRegistered = false;
+        int presence = 0;
+
+        Date currentDate = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String dataFormated = simpleDateFormat.format(currentDate);
+
+        for (Log log : logs) {
+            String[] date = log.getDate().split(" ");
+
+            if (date[0].equals(dataFormated)
+                    && log.getId_user().equals(LoginActivity.loggedUser.getId())
+                    && log.getId_schedule() == cards.get(0).getSubjectSchedule()
+                    && log.getId_subject() == cards.get(0).getSubjectId()) {
+
+                logRegistered = true;
+                presence = log.getPresence();
+
+            }
+        }
+
+        if (logRegistered) {
+            if (presence == 1) {
+                //PUT GREEN LOGO AND DO WHATEVER
+            } else {
+                //PUT RED LOGO AND DO WHATEVER
+            }
+        } else {
+            //PUT ORANGE LOGO AND DO WHATEVER
+
+
+            checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
+                @Override
+                public void onTick(long l) {
+
+                }
+
+                @Override
+                public void onFinish() {
+
+
+                    Date currentDate = new Date();
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String date = simpleDateFormat.format(currentDate);
+                    Calendar c = Calendar.getInstance();
+                    c.setTime(currentDate);
+                    int day_week = c.get(Calendar.DAY_OF_WEEK);
+
+                    int subject_id = 0;
+                    int schedule_id = 0;
+                    int classroom_id = 0;
+                    for (Card card : cards) {
+                        subject_id = card.getSubjectId();
+                        schedule_id = card.getSubjectSchedule();
+                        classroom_id = card.getSubjectClassroomID();
+                    }
+
+                    Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
+                    manageData.addLog(log);
+                }
+            };
+
+        }
+
+    }
+
+    static CountDownTimer updateCardTimer = new CountDownTimer(60000 * 1, 60000 * 1) {
         @Override
         public void onTick(long l) {
 
@@ -338,37 +577,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             getCurrentCard();
 
             start();
-        }
-    };
-
-    CountDownTimer checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
-        @Override
-        public void onTick(long l) {
-
-        }
-
-        @Override
-        public void onFinish() {
-
-
-            Date currentDate = new Date();
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-            String date = simpleDateFormat.format(currentDate);
-            Calendar c = Calendar.getInstance();
-            c.setTime(currentDate);
-            int day_week = c.get(Calendar.DAY_OF_WEEK);
-
-            int subject_id = 0;
-            int schedule_id = 0;
-            int classroom_id = 0;
-            for (Card card : cards) {
-                subject_id = card.getSubjectId();
-                schedule_id = card.getSubjectSchedule();
-                classroom_id = card.getSubjectClassroomID();
-            }
-
-            Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
-            manageData.addLog(log);
         }
     };
 
