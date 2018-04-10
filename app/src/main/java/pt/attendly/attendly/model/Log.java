@@ -15,8 +15,7 @@ public class Log {
     private int id_classroom;
     private int id_schedule;
 
-    public Log(String logID, String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom, int id_schedule) {
-        this.logID = logID;
+    public Log(String id_user, String id_bluetooth, int id_subject, String date, int day_week, int presence, int id_classroom, int id_schedule) {
         this.id_user = id_user;
         this.id_bluetooth = id_bluetooth;
         this.id_subject = id_subject;
