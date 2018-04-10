@@ -291,13 +291,35 @@ public class manageData {
                                             Log log = child.getValue(Log.class);
                                             logs.add(log);
                                         }
+                                        User_ref.addValueEventListener(VEL_User = new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                users.clear();
 
-                                        //FUNCTION TO EXECUTE AFTER
-                                        try {
-                                            MainActivity.getCurrentCard(LoginActivity.loggedUser);
-                                        } catch (Exception e) {
+                                                Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                                for (DataSnapshot child : children) {
+                                                    User user = child.getValue(User.class);
+                                                    users.add(user);
+                                                }
 
-                                        }
+                                                //FUNCTION TO EXECUTE AFTER
+                                                try {
+                                                    MainActivity.getCurrentCard(LoginActivity.loggedUser);
+                                                } catch (Exception e) {
+
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+
+                                            }
+                                        });
+
+
+
+
                                     }
 
                                     @Override
