@@ -416,8 +416,8 @@ public class manageData {
         Log_ref.child(key).setValue(newLog);
     }
 
-    public static void updateLog(Log changedLog, int logID) {
-
+    public static void updateLog(String logID) {
+        Log_ref.child(logID).child("presence").setValue(0);
     }
 
 }

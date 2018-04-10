@@ -95,16 +95,25 @@ public class ManagerActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // Method to remove the presence of the student
     public void removePresence(int id) {
+
+        // Get the student to delete
         User userToDelete = currentStudents.get(id);
-        int logToChangeID = -1;
+        String logToChangeID = "";
+
+        // Check the log of the selected student
         for (int i = 0; i<currentLogs.size(); i++) {
             if (currentLogs.get(i).getId_user().equals(userToDelete.getId())) {
-                currentLogs.get(i).setPresence(0);
+                logToChangeID = currentLogs.get(i).getLogID();
             }
         }
-//        Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
-//        manageData.changeLog(log);
+        manageData.updateLog(logToChangeID);
+    }
+
+    // To replace by the RecyclerView
+    public void some (View v) {
+        removePresence(0);
     }
 
 
