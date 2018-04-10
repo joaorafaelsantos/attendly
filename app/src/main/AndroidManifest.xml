@@ -32,7 +32,6 @@
         <activity android:name=".ProfileActivity" />
         <activity android:name=".ManagerActivity" />
         <activity android:name=".AddActivity" />
-        <activity android:name=".MainTeacherActivity" />
     </application>
 
 </manifest>

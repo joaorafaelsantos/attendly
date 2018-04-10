@@ -6,4 +6,12 @@
     android:layout_height="match_parent"
     tools:context="pt.attendly.attendly.ManagerActivity">
 
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="openAddActivity"
+        android:text="Add Students"
+        tools:layout_editor_absoluteX="134dp"
+        tools:layout_editor_absoluteY="244dp" />
 </android.support.constraint.ConstraintLayout>

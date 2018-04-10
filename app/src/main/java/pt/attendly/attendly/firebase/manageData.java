@@ -10,6 +10,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import pt.attendly.attendly.AddActivity;
 import pt.attendly.attendly.HistoryActivity;
 import pt.attendly.attendly.LoginActivity;
 import pt.attendly.attendly.MainActivity;
@@ -127,6 +128,7 @@ public class manageData {
                                         }
 
                                         //FUNCTION TO EXECUTE AFTER
+                                        AddActivity.getMissingStudents();
 
                                     }
 

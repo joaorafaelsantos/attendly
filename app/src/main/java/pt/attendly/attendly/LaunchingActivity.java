@@ -31,10 +31,6 @@ public class LaunchingActivity extends AppCompatActivity {
             LoginActivity.loggedUser = currentUser;
             ProfileActivity.userImage = userPref.loadUserImage(this);
             Intent intent = new Intent(this, MainActivity.class);
-            if(currentUser.getType() == 1)
-            {
-                intent = new Intent(this, MainTeacherActivity.class);
-            }
             startActivity(intent);
         }
 
