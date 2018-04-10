@@ -2,6 +2,7 @@ package pt.attendly.attendly;
 
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.os.CountDownTimer;
 import android.os.RemoteException;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import org.altbeacon.beacon.Region;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -27,6 +29,7 @@ import java.util.Date;
 import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Card;
 import pt.attendly.attendly.model.Classroom;
+import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
@@ -177,8 +180,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     }
 
     // Method to return the current card (with the current or the next subject of that day)
-    public static void getCurrentCard(User currentUser) {
+    public static void getCurrentCard() {
         // Load the data
+        User currentUser = LoginActivity.loggedUser;
         final ArrayList<User> users = manageData.users;
         final ArrayList<Schedule> schedules = manageData.schedules;
         final ArrayList<Subject> subjects = manageData.subjects;
@@ -229,6 +233,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         String subjectBeacon = "";
         String subjectCourse = "";
         int subjectSchedule = -1;
+        int subject_id = 0;
+        int classroom_id = 0;
 
         // System flag variables
         int totalClasses = 0, pastClasses = 0;
@@ -252,6 +258,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 for (int j = 0; j < classrooms.size(); j++) {
                     if (classrooms.get(j).getId() == tempClassroomID) {
                         subjectClassroom = classrooms.get(j).getName();
+                        classroom_id = classrooms.get(j).getId();
                         subjectBeacon = classrooms.get(j).getId_beacon();
                     }
                 }
@@ -265,6 +272,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
                         if (tempID == tempScheduleID) {
                             subjectName = subjects.get(j).getName();
+                            subject_id = subjects.get(j).getId();
                             subjectCourse = subjects.get(j).getCourse();
                         }
                     }
@@ -306,11 +314,63 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         read = true;
         android.util.Log.d("card2", String.valueOf(read));
         cards.clear();
-        Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule);
-        cards.add(card);
-        aula.setText(cards.get(0).getSubjectName());
 
+
+        if (cards.size() == 0) {
+            aula.setText("Não tem mais aulas!");
+        } else {
+            Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule, subject_id, classroom_id);
+            cards.add(card);
+            aula.setText(cards.get(0).getSubjectName());
+        }
+        updateCardTimer.start();
     }
+
+    static CountDownTimer updateCardTimer = new CountDownTimer(60000*30, 60000*30) {
+        @Override
+        public void onTick(long l) {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+            getCurrentCard();
+
+            start();
+        }
+    };
+
+    CountDownTimer checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
+        @Override
+        public void onTick(long l) {
+
+        }
+
+        @Override
+        public void onFinish() {
+
+
+            Date currentDate = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+            String date = simpleDateFormat.format(currentDate);
+            Calendar c = Calendar.getInstance();
+            c.setTime(currentDate);
+            int day_week = c.get(Calendar.DAY_OF_WEEK);
+
+            int subject_id = 0;
+            int schedule_id = 0;
+            int classroom_id = 0;
+            for (Card card : cards) {
+                subject_id = card.getSubjectId();
+                schedule_id = card.getSubjectSchedule();
+                classroom_id = card.getSubjectClassroomID();
+            }
+
+            Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
+            manageData.addLog(log);
+        }
+    };
 
 
     //DISABLE BACK BUTTON PRESS TO PREVIOUS ACTIVITY

@@ -11,21 +11,24 @@
         android:id="@+id/button5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="13dp"
         android:layout_marginTop="62dp"
         android:onClick="createLogin"
         android:text="Login"
-        app:layout_constraintTop_toBottomOf="@+id/txtPassword"
-        tools:layout_editor_absoluteX="150dp" />
+        app:layout_constraintEnd_toEndOf="@+id/ivLoading"
+        app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
     <EditText
         android:id="@+id/txtEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="182dp"
         android:layout_marginTop="141dp"
         android:ems="10"
         android:hint="Email"
         android:inputType="textPersonName"
         android:text="9150157@esmad.ipp.pt"
+        app:layout_constraintBottom_toTopOf="@+id/ivLoading"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -41,5 +44,17 @@
         android:text="123456"
         app:layout_constraintStart_toStartOf="@+id/txtEmail"
         app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+
+    <ImageView
+        android:id="@+id/ivLoading"
+        android:layout_width="117dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtEmail"
+        app:srcCompat="@drawable/loading_animation" />
 
 </android.support.constraint.ConstraintLayout>

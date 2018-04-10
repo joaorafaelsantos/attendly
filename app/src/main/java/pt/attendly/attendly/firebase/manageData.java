@@ -294,7 +294,7 @@ public class manageData {
 
                                         //FUNCTION TO EXECUTE AFTER
                                         try {
-                                            MainActivity.getCurrentCard(LoginActivity.loggedUser);
+                                            MainActivity.getCurrentCard();
                                         } catch (Exception e) {
 
                                         }

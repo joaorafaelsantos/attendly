@@ -1,10 +1,10 @@
 package pt.attendly.attendly;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -30,16 +30,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.User;
-import pt.attendly.attendly.userPref.userPref;
+import pt.attendly.attendly.other.loadingAnimation;
+import pt.attendly.attendly.other.userPref;
 
 public class LoginActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private EditText txtEmail, txtPassword;
-//    private GifImageView ivLoading;
     final Context con = this;
+
+    ImageView ivLoading;
 
     public static User loggedUser = new User();
 
@@ -50,12 +51,13 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
-//        ivLoading = findViewById(R.id.ivLoading);
+        ivLoading = findViewById(R.id.ivLoading);
+
     }
 
     public void createLogin(View view) {
 
-//        ivLoading.setVisibility(View.VISIBLE);
+        loadingAnimation.execute(ivLoading);
 
         String email = txtEmail.getText().toString();
         String password = txtPassword.getText().toString();
@@ -80,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
                                     userPref.saveUserInfo(newUser, con);
                                     loadUserImage();
                                     Intent intent = new Intent(con, MainActivity.class);
-//                                    ivLoading.setVisibility(View.INVISIBLE);
                                     startActivity(intent);
 
                                 }
