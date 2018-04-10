@@ -1,9 +1,11 @@
 package pt.attendly.attendly;
 
+import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.RemoteException;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
@@ -19,6 +21,7 @@ import org.altbeacon.beacon.Region;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -48,8 +51,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     TextView sala;
     CardView cardView;
     private static boolean data = false;
-
-    static CountDownTimer checkAbsenceTimer;
 
     static boolean subjectExists = false, noClass = false;
 
@@ -223,7 +224,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     @Override
     public void onBeaconServiceConnect() {
-
         beaconManager.addRangeNotifier(new RangeNotifier() {
             @Override
             public void didRangeBeaconsInRegion(Collection<Beacon> beacons, Region region) {
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                             // verificar se o beacon detetado corresponde com o da sala
                             if (beacons.iterator().next().getBluetoothAddress().equals("C1:BA:B4:A2:1C:B3")) {
                                 // verificar se prof abriu a aula
-                                android.util.Log.d("d", String.valueOf(data));
+
                                 if (data == true) {
                                     if (cards.size() > 0) {
                                         String begining = cards.get(0).getSubjectBeginning();
@@ -255,17 +255,39 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                                     //verificar se não tem falta
                                                     if (missClass(begining, LoginActivity.loggedUser.getId()) == false) {
                                                         // registar
-                                                        String date = String.valueOf(new Date());
+                                                        Date date = new Date();
+                                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                                        String dataFormated = simpleDateFormat.format(date);
+
                                                         String idUser = LoginActivity.loggedUser.getId();
+                                                        // obter o id da aula
+                                                        int idSubject= cards.get(0).getSubjectId();
+                                                        // obter o id aula
+                                                        int idClass= cards.get(0).getSubjectClassroomID();
+                                                        // obter o id do horario
+                                                        int idSchedule= cards.get(0).getSubjectSchedule();
+                                                        // obter a data atual
+                                                        Date currentDate = new Date();
+                                                        Calendar c = Calendar.getInstance();
+                                                        c.setTime(currentDate);
+                                                        // obter o dia da semana
+                                                        int day = c.get(Calendar.DAY_OF_WEEK);
 
-
-                                                        //obter id_Subject, dayOfWeek, id_Classroom, id_Schedule
-
-
-                                                        Log log = new Log(idUser, bluetooth, 0, date, 0, 1, 0, 0);
+                                                        // Registar na BD
+                                                        Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
                                                         manageData.addLog(log);
+                                                        // Enviar notificação
 
-
+                                                        // Comunicação do resultado via notificações
+                                                        NotificationCompat.Builder mBuilder =
+                                                                new NotificationCompat.Builder(getApplicationContext())
+                                                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                                                        .setContentTitle("Attendly")
+                                                                        .setContentText("Presença Registada com Sucesso");
+                                                        NotificationManager nm = (NotificationManager)
+                                                                getSystemService(NOTIFICATION_SERVICE);
+                                                        nm.notify(1, mBuilder.build());
+                                                        //  Alterar cor logo na card
                                                     }
                                                 }
                                             }
@@ -291,11 +313,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         {
         }
-    }
-
-    public void openTeacherActivity(View view) {
-        Intent intent = new Intent(this, MainTeacherActivity.class);
-        startActivity(intent);
     }
 
     public void openHistoryActivity(View view) {
@@ -479,7 +496,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         } else {
             android.util.Log.d("card2", String.valueOf(read));
             cards.clear();
-            Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule,0,0);
+            Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule, subject_id, classroom_id);
             cards.add(card);
             aula.setText(cards.get(0).getSubjectName());
 
@@ -487,15 +504,20 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             String end = cards.get(0).getSubjectEnding();
             android.util.Log.d("bool", String.valueOf(checkIfTimeOfClass(begining, end)));
 
-            verifyPresence();
+            try {
+                verifyPresence();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         read = true;
         data = true;
-
-        updateCardTimer.start();
+//        updateCardTimer.start();
     }
 
-    private static void verifyPresence() {
+    private static void verifyPresence() throws ParseException {
+
+        boolean runTimer = true;
 
         final ArrayList<Log> logs = manageData.logs;
 
@@ -503,17 +525,28 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         int presence = 0;
 
         Date currentDate = new Date();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
         String dataFormated = simpleDateFormat.format(currentDate);
+        String startTime = cards.get(0).getSubjectBeginning();
 
         for (Log log : logs) {
+
             String[] date = log.getDate().split(" ");
+
+//            android.util.Log.d("TIMEDONE", date[0]);
+//            android.util.Log.d("TIMEDONE", dataFormated);
+//            android.util.Log.d("TIMEDONE", log.getId_user());
+//            android.util.Log.d("TIMEDONE", LoginActivity.loggedUser.getId());
+//            android.util.Log.d("TIMEDONE", String.valueOf(log.getId_schedule()));
+//            android.util.Log.d("TIMEDONE", String.valueOf(cards.get(0).getSubjectSchedule()));
+//            android.util.Log.d("TIMEDONE", String.valueOf(log.getId_subject()));
+//            android.util.Log.d("TIMEDONE", String.valueOf(cards.get(0).getSubjectId()));
 
             if (date[0].equals(dataFormated)
                     && log.getId_user().equals(LoginActivity.loggedUser.getId())
                     && log.getId_schedule() == cards.get(0).getSubjectSchedule()
                     && log.getId_subject() == cards.get(0).getSubjectId()) {
-
+                android.util.Log.d("TIMEDONE", "AULA ENCONTRADA");
                 logRegistered = true;
                 presence = log.getPresence();
 
@@ -523,62 +556,113 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         if (logRegistered) {
             if (presence == 1) {
                 //PUT GREEN LOGO AND DO WHATEVER
+                android.util.Log.d("TIMEDONE", "GREEN");
+                runTimer = false;
             } else {
                 //PUT RED LOGO AND DO WHATEVER
+                android.util.Log.d("TIMEDONE", "RED");
+                runTimer = false;
             }
         } else {
             //PUT ORANGE LOGO AND DO WHATEVER
 
+            android.util.Log.d("TIMEDONE", "ORANGE");
+            SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 
-            checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
-                @Override
-                public void onTick(long l) {
+            Date classTime = df.parse(startTime);
 
+
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(classTime);
+            cal.add(Calendar.MINUTE, 15);
+
+            String absenceTimeTemp = df.format(cal.getTime());
+            Date absenceTime = df.parse(absenceTimeTemp);
+
+
+            String currentTimeOnly = String.valueOf(currentDate.getHours()) + ":" + String.valueOf(currentDate.getMinutes());
+            Date currentTimeHOURS = df.parse(currentTimeOnly);
+            cal.setTime(currentTimeHOURS);
+            String temp = df.format(cal.getTime());
+
+            Date nowTime = df.parse(temp);
+            long elapsed = absenceTime.getTime() - nowTime.getTime();
+
+            android.util.Log.d("TIMEDONE", String.valueOf(absenceTime.getTime()));
+            android.util.Log.d("TIMEDONE", String.valueOf(nowTime.getTime()));
+            android.util.Log.d("TIMEDONE", String.valueOf(elapsed));
+            elapsed = -1;
+            if (elapsed <= 0) {
+                runTimer = false;
+
+                //REGISTER ABSENCE
+                Date currentDate2 = new Date();
+                SimpleDateFormat simpleDateFormat2 = new SimpleDateFormat("dd/MM/yyyy");
+                String date = simpleDateFormat2.format(currentDate2);
+                Calendar c = Calendar.getInstance();
+                c.setTime(currentDate2);
+                int day_week = c.get(Calendar.DAY_OF_WEEK);
+
+                int subject_id = 0;
+                int schedule_id = 0;
+                int classroom_id = 0;
+                for (Card card : cards) {
+                    subject_id = card.getSubjectId();
+                    schedule_id = card.getSubjectSchedule();
+                    classroom_id = card.getSubjectClassroomID();
                 }
 
-                @Override
-                public void onFinish() {
+                Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
+//                manageData.addLog(log);
+            }
+            android.util.Log.d("TIMEDONE", String.valueOf(runTimer));
+//            if(runTimer)
+//            {
+//                checkAbsenceTimer.start();
+//            }
+//            else
+//            {
+//                checkAbsenceTimer.cancel();
+//            }
 
-
-                    Date currentDate = new Date();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    String date = simpleDateFormat.format(currentDate);
-                    Calendar c = Calendar.getInstance();
-                    c.setTime(currentDate);
-                    int day_week = c.get(Calendar.DAY_OF_WEEK);
-
-                    int subject_id = 0;
-                    int schedule_id = 0;
-                    int classroom_id = 0;
-                    for (Card card : cards) {
-                        subject_id = card.getSubjectId();
-                        schedule_id = card.getSubjectSchedule();
-                        classroom_id = card.getSubjectClassroomID();
-                    }
-
-                    Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
-                    manageData.addLog(log);
-                }
-            };
 
         }
 
     }
 
-    static CountDownTimer updateCardTimer = new CountDownTimer(60000 * 1, 60000 * 1) {
-        @Override
-        public void onTick(long l) {
 
-        }
-
-        @Override
-        public void onFinish() {
-
-            getCurrentCard();
-
-            start();
-        }
-    };
+//    static CountDownTimer checkAbsenceTimer = new CountDownTimer(60000 * 1, 60000) {
+//        @Override
+//        public void onTick(long l) {
+//            android.util.Log.d("TIMEDONE", "ABSENCE TIMER RUNNING");
+//        }
+//
+//        @Override
+//        public void onFinish() {
+//
+//            try {
+//                verifyPresence();
+//            } catch (ParseException e) {
+//                e.printStackTrace();
+//            }
+//            start();
+//        }
+//    };
+//
+//    static CountDownTimer updateCardTimer = new CountDownTimer(60000 * 1, 60000 * 1) {
+//        @Override
+//        public void onTick(long l) {
+//            android.util.Log.d("TIMEDONE", "CARD TIMER RUNNING");
+//        }
+//
+//        @Override
+//        public void onFinish() {
+//
+//            getCurrentCard();
+//
+//            start();
+//        }
+//    };
 
 
     //DISABLE BACK BUTTON PRESS TO PREVIOUS ACTIVITY

@@ -82,6 +82,10 @@ public class LoginActivity extends AppCompatActivity {
                                     userPref.saveUserInfo(newUser, con);
                                     loadUserImage();
                                     Intent intent = new Intent(con, MainActivity.class);
+                                    if(newUser.getType() == 1)
+                                    {
+                                        intent = new Intent(con, MainTeacherActivity.class);
+                                    }
                                     startActivity(intent);
 
                                 }
