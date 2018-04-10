@@ -18,6 +18,7 @@ import pt.attendly.attendly.model.User;
 public class ManagerActivity extends AppCompatActivity {
 
     public static ArrayList<User> currentStudents = new ArrayList<>();
+    public static ArrayList<Log> currentLogs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class ManagerActivity extends AppCompatActivity {
 
         // Clear data
         currentStudents.clear();
+        currentLogs.clear();
 
         // Load data
         ArrayList<Log> logs = manageData.logs;
@@ -61,6 +63,7 @@ public class ManagerActivity extends AppCompatActivity {
                         String tempUserID = tempUser.getId();
                         if (tempUserID.equals(tempLog.getId_user())) {
                             currentStudents.add(tempUser);
+                            currentLogs.add(tempLog);
                         }
                     }
                 }
@@ -90,6 +93,18 @@ public class ManagerActivity extends AppCompatActivity {
     public void openAddActivity(View view) {
         Intent intent = new Intent(this, AddActivity.class);
         startActivity(intent);
+    }
+
+    public void removePresence(int id) {
+        User userToDelete = currentStudents.get(id);
+        int logToChangeID = -1;
+        for (int i = 0; i<currentLogs.size(); i++) {
+            if (currentLogs.get(i).getId_user().equals(userToDelete.getId())) {
+                currentLogs.get(i).setPresence(0);
+            }
+        }
+//        Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
+//        manageData.changeLog(log);
     }
 
 

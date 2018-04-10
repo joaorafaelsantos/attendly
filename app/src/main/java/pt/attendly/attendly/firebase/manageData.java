@@ -412,8 +412,12 @@ public class manageData {
 
     public static void addLog(Log newLog) {
         String key = Log_ref.push().getKey();
+        newLog.setLogID(key);
         Log_ref.child(key).setValue(newLog);
     }
 
+    public static void updateLog(Log changedLog, int logID) {
+
+    }
 
 }
