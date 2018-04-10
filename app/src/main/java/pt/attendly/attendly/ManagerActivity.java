@@ -111,9 +111,9 @@ public class ManagerActivity extends AppCompatActivity {
         manageData.updateLog(logToChangeID);
     }
 
-    // To replace by the RecyclerView
+    // To replace by the RecyclerView position
     public void some (View v) {
-        removePresence(0);
+    removePresence(0);
     }
 
 
