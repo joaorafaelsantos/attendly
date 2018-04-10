@@ -2,11 +2,16 @@ package pt.attendly.attendly;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Card;
+import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.User;
 
 public class AddActivity extends AppCompatActivity {
@@ -71,5 +76,33 @@ public class AddActivity extends AppCompatActivity {
         for (int i = 0; i<missingStudents.size(); i++) {
             android.util.Log.d("teste", "This student is missing: " + missingStudents.get(i).getName());
         }
+    }
+
+    public static void addStudent (int id) {
+
+        // Get the student to add
+        User userToAdd = missingStudents.get(id);
+
+        // Current subject
+        Card currentSubject = MainActivity.cards.get(0);
+        int idSubject= currentSubject.getSubjectId();
+        int idClass= currentSubject.getSubjectClassroomID();
+        int idSchedule= currentSubject.getSubjectSchedule();
+
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String dataFormated = simpleDateFormat.format(date);
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        int day = c.get(Calendar.DAY_OF_WEEK);
+
+        // Log to add
+        Log log = new Log(userToAdd.getId(), "", idSubject, dataFormated, day , 1, idClass, idSchedule);
+        manageData.addLog(log);
+    }
+
+    public void some(View v) {
+        addStudent(0);
+        android.util.Log.d("teste", missingStudents.get(0).getName());
     }
 }
