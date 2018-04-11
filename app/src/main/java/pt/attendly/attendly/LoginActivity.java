@@ -7,9 +7,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -41,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     final Context con = this;
 
     ImageView ivLoading;
+    ConstraintLayout loadingFrame;
+    Button btnLogin;
 
     public static User loggedUser = new User();
 
@@ -52,55 +56,72 @@ public class LoginActivity extends AppCompatActivity {
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         ivLoading = findViewById(R.id.ivLoading);
-
+        loadingFrame = findViewById(R.id.loadingFrame);
+        btnLogin = findViewById(R.id.btnLogin);
     }
 
     public void createLogin(View view) {
 
-        loadingAnimation.execute(ivLoading);
+        loadingFrame.setVisibility(View.VISIBLE);
+        btnLogin.setVisibility(View.INVISIBLE);
+        final AnimationDrawable loading_animation = (AnimationDrawable) ivLoading.getDrawable();
+        loading_animation.start();
 
         String email = txtEmail.getText().toString();
         String password = txtPassword.getText().toString();
+        if(email.isEmpty() || password.isEmpty())
+        {
+            Toast.makeText(LoginActivity.this, "Email e/ou palavra-passe errados!", Toast.LENGTH_SHORT).show();
+            loadingFrame.setVisibility(View.INVISIBLE);
+            btnLogin.setVisibility(View.VISIBLE);
+            loading_animation.stop();
+        }
+        else
+        {
+            mAuth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                final FirebaseUser user = mAuth.getCurrentUser();
 
-        mAuth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            final FirebaseUser user = mAuth.getCurrentUser();
+                                FirebaseDatabase.getInstance().getReference("User").orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
 
-                            FirebaseDatabase.getInstance().getReference("User").orderByChild("id").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                        Iterable<DataSnapshot> children = dataSnapshot.getChildren();
+                                        for (DataSnapshot child : children) {
+                                            loggedUser = child.getValue(User.class);
+                                        }
+                                        User newUser = loggedUser;
+                                        userPref.saveUserInfo(newUser, con);
+                                        loadUserImage();
+                                        Intent intent = new Intent(con, MainActivity.class);
+                                        startActivity(intent);
 
-                                    Iterable<DataSnapshot> children = dataSnapshot.getChildren();
-                                    for (DataSnapshot child : children) {
-                                        loggedUser = child.getValue(User.class);
                                     }
-                                    User newUser = loggedUser;
-                                    userPref.saveUserInfo(newUser, con);
-                                    loadUserImage();
-                                    Intent intent = new Intent(con, MainActivity.class);
-                                    startActivity(intent);
 
-                                }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-
-                                }
-                            });
+                                    }
+                                });
 
 
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                // If sign in fails, display a message to the user.
+                                loadingFrame.setVisibility(View.INVISIBLE);
+                                btnLogin.setVisibility(View.VISIBLE);
+                                loading_animation.stop();
+                                Toast.makeText(LoginActivity.this, "Email e/ou palavra-passe errados!", Toast.LENGTH_SHORT).show();
+
+                            }
 
                         }
+                    });
+        }
 
-                    }
-                });
     }
 
     public void loadUserImage() {

@@ -9,11 +9,10 @@
     tools:layout_editor_absoluteY="81dp">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/ivLogo"
         android:layout_width="0dp"
-        android:layout_height="189dp"
-        android:layout_marginBottom="56dp"
-        android:layout_marginTop="117dp"
+        android:layout_height="214dp"
+        android:layout_marginTop="90dp"
         app:layout_constraintBottom_toTopOf="@+id/txtEmail"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,69 +22,97 @@
     <EditText
         android:id="@+id/txtEmail"
         android:layout_width="223dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="274dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="40dp"
+        android:backgroundTint="@color/attendlyRed"
         android:ems="10"
         android:fontFamily="@font/exo2_light"
         android:hint="Email"
         android:inputType="textPersonName"
         android:singleLine="true"
-        android:text="9150157@esmad.ipp.pt"
+        android:alpha="0.5"
+        android:text=""
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/txtPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@+id/ivLogo" />
 
     <EditText
         android:id="@+id/txtPassword"
         android:layout_width="223dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="54dp"
-        android:layout_marginTop="16dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="10dp"
+        android:backgroundTint="@color/attendlyRed"
         android:ems="10"
         android:fontFamily="@font/exo2_light"
-        android:hint="Password"
+        android:hint="Palavra-passe"
         android:inputType="textPassword"
         android:singleLine="true"
-        android:text="123456"
+        android:text=""
         android:textAlignment="center"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/button5"
+        app:layout_constraintBottom_toTopOf="@+id/btnLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
 
     <Button
-        android:id="@+id/button5"
+        android:id="@+id/btnLogin"
         android:layout_width="223dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="149dp"
+        android:layout_marginBottom="100dp"
+        android:layout_marginTop="50dp"
         android:background="@drawable/round_button"
         android:fontFamily="@font/exo2_regular"
         android:onClick="createLogin"
-        android:text="Login"
+        android:text="Iniciar Sessão"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtPassword" />
 
-    <ImageView
-        android:id="@+id/ivLoading"
-        android:layout_width="117dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="201dp"
-        android:layout_marginTop="16dp"
-        android:visibility="invisible"
-        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
-        app:layout_constraintStart_toStartOf="@+id/imageView2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/loading_animation" />
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/loadingFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible">
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/ivDarkBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#8fffffff" />
+
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/ivLoading"
+            android:layout_width="158dp"
+            android:layout_height="161dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/loading_animation" />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#000</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBlack">#000</color>
-
+    <color name="colorLoginBackground">#f4f4f4</color>
+    <color name="attendlyRed">#e54b4b</color>
 </resources>
