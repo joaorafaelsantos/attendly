@@ -5,10 +5,13 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.CountDownTimer;
 import android.os.RemoteException;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -49,19 +52,51 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
 
     static ArrayList<Card> cards = new ArrayList<>();
-    static TextView aula;
-    TextView sala;
+    static TextView aula, sala, hora, dateTime, curso;
     CardView cardView;
     private static boolean data = false;
 
     static boolean subjectExists = false, noClass = false;
 
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+
+                    return true;
+                case R.id.navigation_historic:
+                    Intent intent2 = new Intent(getApplicationContext(), HistoryActivity.class);
+                    startActivity(intent2);
+
+                    return true;
+                case R.id.navigation_profile:
+
+                    Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent);
+
+                    return true;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        aula = findViewById(R.id.txtClass);
+        aula = findViewById(R.id.txtNameSubject);
+        sala = findViewById(R.id.txtClass);
+        dateTime = findViewById(R.id.txtDate);
+        curso = findViewById(R.id.txtNameCourse);
+        hora = findViewById(R.id.txtTime);
         cardView = findViewById(R.id.cardView);
+
+        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mBottomNavigationView.getMenu().findItem(R.id.navigation_home).setChecked(true);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         manageData.getMainActivityData();
 
@@ -501,6 +536,10 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             Card card = new Card(subjectBeginning, subjectEnding, subjectClassroom, subjectName, subjectBeacon, subjectCourse, subjectSchedule, subject_id, classroom_id);
             cards.add(card);
             aula.setText(cards.get(0).getSubjectName());
+            sala.setText(cards.get(0).getSubjectClassroom());
+            hora.setText(cards.get(0).getSubjectBeginning()+"-"+cards.get(0).getSubjectEnding());
+            //dateTime.setText(cards.get(0).);
+            curso.setText(cards.get(0).getSubjectCourse());
 
             String begining = cards.get(0).getSubjectBeginning();
             String end = cards.get(0).getSubjectEnding();

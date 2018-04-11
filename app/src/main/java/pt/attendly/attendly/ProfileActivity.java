@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,32 @@ public class ProfileActivity extends AppCompatActivity  {
     static Bitmap userImage;
     final Context con = this;
 
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
+
+                    return true;
+                case R.id.navigation_historic:
+                    Intent intent2 = new Intent(getApplicationContext(), HistoryActivity.class);
+                    startActivity(intent2);
+
+                    return true;
+                case R.id.navigation_profile:
+
+
+                    return true;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +71,10 @@ public class ProfileActivity extends AppCompatActivity  {
         txtEmail = findViewById(R.id.txtEmail);
         user = LoginActivity.loggedUser;
         setInfo();
+
+        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mBottomNavigationView.getMenu().findItem(R.id.navigation_profile).setChecked(true);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
     private void setInfo(){
