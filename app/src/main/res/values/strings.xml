@@ -4,4 +4,5 @@
     <string name="title_historico">Historico</string>
     <string name="title_home">Home</string>
     <string name="title_perfil">Perfil</string>
+    <string name="title_empty"></string>
 </resources>

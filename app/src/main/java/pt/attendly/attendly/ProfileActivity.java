@@ -67,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         imageView = findViewById(R.id.imageView);
-        txtName = findViewById(R.id.txtName);
+        txtName = findViewById(R.id.txtNameStudent);
         txtEmail = findViewById(R.id.txtEmail);
         user = LoginActivity.loggedUser;
         setInfo();

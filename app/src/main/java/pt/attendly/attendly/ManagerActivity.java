@@ -3,12 +3,19 @@ package pt.attendly.attendly;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.format.DateFormat;
 import android.view.View;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Calendar;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Card;
@@ -20,11 +27,42 @@ public class ManagerActivity extends AppCompatActivity {
     public static ArrayList<User> currentStudents = new ArrayList<>();
     public static ArrayList<Log> currentLogs = new ArrayList<>();
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    //private List<Character> charactersList;
+    private RVAdapter studentsAdpter;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
         manageData.getManagerActivityData();
+
+
+
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+
+        // specify an adapter (see also next example)
+        // mAdapter = new MyAdapter(myDataset);
+        // mRecyclerView.setAdapter(mAdapter);
+        //initializeDat();
+
+        studentsAdpter= new RVAdapter(currentStudents);
+        mRecyclerView.setAdapter(studentsAdpter);
+
+
     }
 
     public static void getCurrentStudents() {
@@ -46,13 +84,17 @@ public class ManagerActivity extends AppCompatActivity {
             int currentSchedule = cards.get(0).getSubjectSchedule();
             Date currentDate = new Date();
 
+            String currentDay = (String) DateFormat.format("dd", currentDate);
+
             // Check if exists logs of the user on the current class (if it's true, add to the current students array)
             for (int i = 0; i < logs.size(); i++) {
                 Log tempLog = logs.get(i);
                 Date tempDate = parseDate(tempLog.getDate());
+                String tempDay = (String) DateFormat.format("dd", tempDate);
 
                 if (tempLog.getId_schedule() == currentSchedule
                         && currentDate.getDay() + 1 == tempDate.getDay() + 1
+                        && currentDay.equals(tempDay)
                         && currentDate.getMonth() == tempDate.getMonth()
                         && currentDate.getYear() == tempDate.getYear()
                         && !teacher.getId().equals(tempLog.getId_user())

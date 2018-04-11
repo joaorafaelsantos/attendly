@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="1dp"
         android:background="?android:attr/windowBackground"
+        app:itemIconTint="@drawable/selector"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/navigation">
@@ -21,10 +22,10 @@
     </android.support.design.widget.BottomNavigationView>
 
     <TextView
-        android:id="@+id/txtName"
+        android:id="@+id/txtNameStudent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="1dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
@@ -51,29 +52,36 @@
         android:id="@+id/button6"
         android:layout_width="223dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="80dp"
+        android:layout_marginTop="14dp"
         android:background="@drawable/round_button"
+        android:fontFamily="@font/exo2_regular"
         android:onClick="executeLogout"
         android:text="Terminar Sessão"
+        android:textColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button7" />
 
     <Button
         android:id="@+id/button7"
         android:layout_width="223dp"
         android:layout_height="35dp"
-        android:layout_marginBottom="14dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginBottom="1dp"
+        android:layout_marginTop="30dp"
         android:background="@drawable/round_button"
+        android:fontFamily="@font/exo2_regular"
         android:onClick="resetPassword"
         android:text="Alterar Password"
+        android:textColor="#fff"
         app:layout_constraintBottom_toTopOf="@+id/button6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/txtEmail"
+        app:layout_constraintVertical_chainStyle="packed" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView5"
@@ -81,13 +89,13 @@
         android:layout_height="140dp"
 
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="83dp"
+        android:layout_marginBottom="23dp"
         android:layout_marginTop="35dp"
         android:innerRadius="0dp"
         android:shape="ring"
         android:thicknessRatio="1.9"
         app:cardCornerRadius="75dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+        app:layout_constraintBottom_toTopOf="@+id/txtNameStudent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
