@@ -1,17 +1,24 @@
 package pt.attendly.attendly;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import pt.attendly.attendly.firebase.manageData;
 import pt.attendly.attendly.model.Classroom;
 import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Subject;
+import pt.attendly.attendly.other.layoutChanges;
 
 public class HistoryActivity extends AppCompatActivity {
 
@@ -23,12 +30,17 @@ public class HistoryActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    startActivity(intent);
 
                     return true;
                 case R.id.navigation_historic:
 
+
                     return true;
                 case R.id.navigation_profile:
+                    Intent intent2 = new Intent(getApplicationContext(), ProfileActivity.class);
+                    startActivity(intent2);
 
                     return true;
             }
@@ -36,53 +48,61 @@ public class HistoryActivity extends AppCompatActivity {
         }
     };
 
+    private static RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private static RecyclerView.LayoutManager mLayoutManager;
+    private static HistoryAdapter historyAdapter;
+
+    static TextView txtAttendence;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
+
+        txtAttendence = findViewById(R.id.txtAttendence);
+
         manageData.getHistoryActivityData();
-        // Call the methods
-//        ArrayList<Log> logs = getLogs("3SGi1vnVujY7y4xsHc07JmBhS9U2");
-//        android.util.Log.d("FB", String.valueOf(getStudentAttendance("3SGi1vnVujY7y4xsHc07JmBhS9U2")));
+
+        BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
+        mBottomNavigationView.getMenu().findItem(R.id.navigation_historic).setChecked(true);
+        mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        layoutChanges.setIconSize(mBottomNavigationView, this);
+
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(this );
+        mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
-    // Method to return all the logs of a user
-    public ArrayList<Log> getLogs(String ID) {
-        // Hardcode - to replace by firebase
-        ArrayList<Integer> exampleSchedules = new ArrayList<>();
-        exampleSchedules.add(0);
-        exampleSchedules.add(1);
-        exampleSchedules.add(2);
-        ArrayList<Integer> exampleTeachers = new ArrayList<>();
-        exampleTeachers.add(3);
-        ArrayList<Subject> subjects = new ArrayList<>();
-        Subject sb1 = new Subject(0, "PDM", "TSIW", exampleSchedules , exampleTeachers);
-        ArrayList<Classroom> classrooms = new ArrayList<>();
-        Classroom c1 = new Classroom(0, "B206", "IDBEACONXPTO");
-        classrooms.add(c1);
-        ArrayList<Log> logs = new ArrayList<Log>();
-//        Log l1 = new Log(ID, "BLUETOOTHID", 0, "28-03-2018", 4, 1, 0);
-//        Log l2 = new Log(ID, "BLUETOOTHID", 0, "03-04-2018", 3, 0, 0);
-//        Log l3 = new Log("BsT8jtyt7HWwtDu6Jq2xcvJZvW02", "BLUETOOTHID", 0, "04-04-2018", 4, 1, 0);
-//        logs.add(l1);
-//        logs.add(l2);
-//        logs.add(l3);
+    public static void showHistory(){
 
-        // For every log only adds the user ones
-        ArrayList<Log> userLogs = new ArrayList<Log>();
+        ArrayList<Log> userLogs = manageData.logs;
 
-        for (int i = 0; i<logs.size(); i++) {
-            Log tempLog = logs.get(i);
-            if (tempLog.getId_user().equals(ID)) {
-                userLogs.add(tempLog);
+        Collections.sort(userLogs, new Comparator<Log>() {
+            public int compare(Log o1, Log o2) {
+                if (o1.getDate() == null || o2.getDate() == null)
+                    return 0;
+                return o2.getDate().compareTo(o1.getDate());
             }
-        }
+        });
 
-        return userLogs;
+        historyAdapter= new HistoryAdapter(userLogs);
+        mRecyclerView.setAdapter(historyAdapter);
+
+        getStudentAttendance();
+
     }
+
 
     // Method to return the attendance of the user
-    public static int getStudentAttendance() {
+    public static void getStudentAttendance() {
         // Get the all the user logs
         ArrayList<Log> userLogs =  manageData.logs;
 
@@ -104,6 +124,8 @@ public class HistoryActivity extends AppCompatActivity {
         }
 
         android.util.Log.d("LOGHIS", String.valueOf(attendance));
-        return attendance;
+
+        txtAttendence.setText("Assiduidade: " + String.valueOf(attendance) + "%");
+
     }
 }

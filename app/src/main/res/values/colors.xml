@@ -7,4 +7,7 @@
     <color name="colorSelected">#E54B4B</color>
     <color name="colorLoginBackground">#f4f4f4</color>
     <color name="attendlyRed">#e54b4b</color>
+    <color name="white">#ffffff</color>
+    <color name="presenceGreen">#acefcc</color>
+    <color name="presenceRed">#FF917B</color>
 </resources>

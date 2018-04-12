@@ -25,6 +25,7 @@ import java.io.IOException;
 
 import pt.attendly.attendly.firebase.uploadFiles;
 import pt.attendly.attendly.model.User;
+import pt.attendly.attendly.other.layoutChanges;
 import pt.attendly.attendly.other.userPref;
 
 public class ProfileActivity extends AppCompatActivity  {
@@ -64,10 +65,12 @@ public class ProfileActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
         imageView = findViewById(R.id.imageView);
-        txtName = findViewById(R.id.txtNameStudent);
+        txtName = findViewById(R.id.txtSubject);
         txtEmail = findViewById(R.id.txtEmail);
         user = LoginActivity.loggedUser;
         setInfo();
@@ -75,6 +78,8 @@ public class ProfileActivity extends AppCompatActivity  {
         BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         mBottomNavigationView.getMenu().findItem(R.id.navigation_profile).setChecked(true);
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        layoutChanges.setIconSize(mBottomNavigationView, this);
     }
 
     private void setInfo(){

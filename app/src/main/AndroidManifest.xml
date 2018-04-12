@@ -14,7 +14,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
@@ -29,18 +29,23 @@
             </intent-filter>
         </activity>
         <activity android:name=".MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/loginNoTitle"/>
         <activity android:name=".LoginActivity"
             android:screenOrientation="portrait"
             android:theme="@style/loginNoTitle"/>
         <activity android:name=".HistoryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/loginNoTitle"/>
         <activity android:name=".ProfileActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/loginNoTitle"/>
         <activity android:name=".ManagerActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/loginNoTitle"/>
         <activity android:name=".AddActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/loginNoTitle"/>
     </application>
 
 </manifest>

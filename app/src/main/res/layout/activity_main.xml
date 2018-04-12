@@ -6,136 +6,134 @@
     android:layout_height="match_parent"
     android:background="#E54B4B"
     tools:context="pt.attendly.attendly.MainActivity"
-    tools:layout_editor_absoluteY="81dp">
+    tools:layout_editor_absoluteY="25dp">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:background="@android:color/white"
+        android:fontFamily="@font/sacramento"
+        android:text="Attendly"
+        android:textAlignment="center"
+        android:textColor="@color/attendlyRed"
+        android:textSize="36sp"
+        app:layout_editor_absoluteY="0sp" />
 
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
-        app:itemIconTint="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation" />
-
-    <Button
-        android:id="@+id/button4"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:onClick="openProfile"
-        android:text="Enter Profile"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="412dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="openTeacherActivity"
-        android:text="ENTER TEACHER MAIN ACTIVITY"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="412dp" />
-
-    <Button
-        android:id="@+id/button8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="openManagerClass"
-        android:text="Enter Manager Activity"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="412dp" />
-
-    <Button
-        android:id="@+id/btnHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="openHistoryActivity"
-        android:text="Enter History Activity"
-        android:visibility="gone"
-        tools:layout_editor_absoluteX="180dp"
-        tools:layout_editor_absoluteY="412dp" />
 
     <TextView
         android:id="@+id/txtEstado"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:layout_marginBottom="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="11dp"
         android:fontFamily="@font/exo2_regular"
         android:paddingBottom="5dp"
-        android:text="Estado"
         android:textAlignment="center"
         android:textColor="#ffff"
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintVertical_bias="0.457" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="296dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="1dp"
+        android:layout_height="359dp"
+        android:layout_marginBottom="29dp"
+        android:layout_marginEnd="57dp"
+        android:layout_marginStart="58dp"
         app:cardCornerRadius="15dp"
         app:cardElevation="7dp"
-        app:layout_constraintBottom_toTopOf="@+id/button14"
+        app:layout_constraintBottom_toTopOf="@+id/btnManageClass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEstado">
+        app:layout_constraintStart_toStartOf="parent">
 
-        <LinearLayout
+        <FrameLayout
+            android:id="@+id/frame_loading"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:visibility="visible">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/ivLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="82dp"
+                    android:layout_marginEnd="48dp"
+                    android:layout_marginStart="48dp"
+                    android:layout_marginTop="82dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/loading_animation" />
+            </android.support.constraint.ConstraintLayout>
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:id="@+id/card_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="invisible">
 
             <ImageView
+                android:id="@+id/ivLogoPresence"
                 android:layout_width="match_parent"
-                android:layout_height="152dp"
-                android:layout_marginBottom="10dp"
-                app:srcCompat="@drawable/frame_9" />
+                android:layout_height="125dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                app:srcCompat="@drawable/orange" />
 
             <TextView
                 android:id="@+id/txtNameSubject"
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
-                android:fontFamily="@font/exo2_regular"
+                android:layout_height="50dp"
+                android:fontFamily="@font/exo2_semibold"
                 android:paddingBottom="10dp"
-                android:text="Aula"
+                android:text="Subject"
                 android:textAlignment="center"
-                android:textSize="22sp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"
                 tools:layout_editor_absoluteX="270dp"
                 tools:layout_editor_absoluteY="189dp" />
 
             <TextView
                 android:id="@+id/txtNameCourse"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:fontFamily="@font/exo2_regular"
-                android:text="Aula"
+                android:layout_height="30dp"
+                android:fontFamily="@font/exo2_light"
+                android:text="Course"
                 android:textAlignment="center"
-                android:textSize="15sp"
+                android:textColor="@android:color/black"
+                android:textSize="12sp"
                 tools:layout_editor_absoluteX="270dp"
                 tools:layout_editor_absoluteY="189dp" />
 
             <TextView
-                android:id="@+id/txtDate"
+                android:id="@+id/txtClass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#f4f4f4"
                 android:fontFamily="@font/exo2_regular"
-                android:text="Aula"
+                android:paddingBottom="5dp"
+                android:paddingTop="10dp"
+                android:text="Sala"
                 android:textAlignment="center"
-                android:textSize="20sp"
-                tools:layout_editor_absoluteX="270dp"
-                tools:layout_editor_absoluteY="189dp" />
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="@+id/txtSubject"
+                app:layout_constraintTop_toBottomOf="@+id/txtSubject" />
 
             <TextView
                 android:id="@+id/txtTime"
@@ -143,42 +141,65 @@
                 android:layout_height="wrap_content"
                 android:background="#f4f4f4"
                 android:fontFamily="@font/exo2_regular"
-                android:text="Aula"
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp"
+                android:text="Hora"
                 android:textAlignment="center"
-                android:textSize="18sp"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
                 tools:layout_editor_absoluteX="8dp"
                 tools:layout_editor_absoluteY="264dp" />
 
             <TextView
-                android:id="@+id/txtClass"
+                android:id="@+id/txtDate"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="0dp"
+                android:layout_height="wrap_content"
                 android:background="#f4f4f4"
                 android:fontFamily="@font/exo2_regular"
-                android:text="Class"
+                android:paddingBottom="25dp"
+                android:paddingTop="5dp"
+                android:text="Dia"
                 android:textAlignment="center"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="@+id/txtNameStudent"
-                app:layout_constraintTop_toBottomOf="@+id/txtNameStudent" />
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                tools:layout_editor_absoluteX="270dp"
+                tools:layout_editor_absoluteY="189dp" />
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
     <Button
-        android:id="@+id/button14"
-        android:layout_width="259dp"
+        android:id="@+id/btnManageClass"
+        android:layout_width="296dp"
         android:layout_height="35dp"
-        android:layout_marginEnd="125dp"
-        android:layout_marginStart="125dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginBottom="26dp"
+        android:layout_marginEnd="76dp"
+        android:layout_marginStart="76dp"
         android:background="@drawable/round_button_w"
+        android:fontFamily="@font/exo2_regular"
         android:onClick="openManagerClass"
-        android:text="Gerir Aula"
+        android:text="Gerir aula"
         android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="@color/attendlyRed"
+        android:textSize="18sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:background="@color/white"
+        android:visibility="visible"
+        android:layout_gravity="bottom"
+        app:itemIconTint="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:menu="@menu/navigation"/>
 
 </android.support.constraint.ConstraintLayout>

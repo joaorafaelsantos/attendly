@@ -7,81 +7,26 @@
     tools:context="pt.attendly.attendly.ProfileActivity"
     tools:layout_editor_absoluteY="81dp">
 
-
-    <android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:background="?android:attr/windowBackground"
-        app:itemIconTint="@drawable/selector"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:menu="@menu/navigation">
-
-    </android.support.design.widget.BottomNavigationView>
-
     <TextView
-        android:id="@+id/txtNameStudent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Name"
-        app:layout_constraintBottom_toBottomOf="@+id/txtEmail"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView5" />
-
-    <TextView
-        android:id="@+id/txtEmail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Email"
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:background="@android:color/white"
+        android:fontFamily="@font/sacramento"
+        android:text="Attendly"
         android:textAlignment="center"
-        app:layout_constraintBottom_toTopOf="@+id/button7"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+        android:textColor="@color/attendlyRed"
+        android:textSize="36sp"
+        app:layout_editor_absoluteY="0sp" />
 
-    <Button
-        android:id="@+id/button6"
-        android:layout_width="223dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="80dp"
-        android:layout_marginTop="14dp"
-        android:background="@drawable/round_button"
-        android:fontFamily="@font/exo2_regular"
-        android:onClick="executeLogout"
-        android:text="Terminar Sessão"
-        android:textColor="#fff"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#f4f4f4"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="223dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="1dp"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/round_button"
-        android:fontFamily="@font/exo2_regular"
-        android:onClick="resetPassword"
-        android:text="Alterar Password"
-        android:textColor="#fff"
-        app:layout_constraintBottom_toTopOf="@+id/button6"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtEmail"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardView5"
@@ -89,16 +34,18 @@
         android:layout_height="140dp"
 
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="23dp"
-        android:layout_marginTop="35dp"
+        android:layout_marginBottom="38dp"
+        android:layout_marginEnd="136dp"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="54dp"
         android:innerRadius="0dp"
         android:shape="ring"
         android:thicknessRatio="1.9"
-        app:cardCornerRadius="75dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtNameStudent"
+        app:cardCornerRadius="70dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtSubject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView">
 
         <ImageView
             android:id="@+id/imageView"
@@ -118,12 +65,100 @@
             android:layout_height="match_parent"
             android:layout_marginTop="100dp"
             android:background="@color/common_google_signin_btn_text_dark_disabled"
+            android:fontFamily="@font/exo2_regular"
             android:onClick="showFileChooser"
-            android:text="Alterar "
+            android:gravity="center"
+            android:text="Alterar"
+            android:textAlignment="center"
+            android:textAllCaps="false"
             android:textColor="#ffff"
             tools:layout_editor_absoluteX="117dp"
             tools:layout_editor_absoluteY="104dp" />
 
     </android.support.v7.widget.CardView>
+
+    <TextView
+        android:id="@+id/txtSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="187dp"
+        android:layout_marginStart="187dp"
+        android:layout_marginTop="38dp"
+        android:fontFamily="@font/exo2_regular"
+        android:text="Name"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/txtEmail"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView5" />
+
+    <TextView
+        android:id="@+id/txtEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="63dp"
+        android:layout_marginEnd="188dp"
+        android:layout_marginStart="189dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/exo2_regular"
+        android:text="Email"
+        android:textAlignment="center"
+        app:layout_constraintBottom_toTopOf="@+id/button7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtSubject" />
+
+    <Button
+        android:id="@+id/button7"
+        android:layout_width="223dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="94dp"
+        android:layout_marginStart="94dp"
+        android:background="@drawable/round_button"
+        android:fontFamily="@font/exo2_regular"
+        android:onClick="resetPassword"
+        android:text="Alterar palavra-passe"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button6"
+        android:layout_width="223dp"
+        android:layout_height="35dp"
+        android:layout_marginBottom="65dp"
+        android:layout_marginEnd="94dp"
+        android:layout_marginStart="94dp"
+        android:background="@drawable/round_button"
+        android:fontFamily="@font/exo2_regular"
+        android:onClick="executeLogout"
+        android:text="Terminar sessão"
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="0dp"
+        android:layout_height="55dp"
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:itemIconTint="@drawable/selector"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/navigation">
+
+    </android.support.design.widget.BottomNavigationView>
 
 </android.support.constraint.ConstraintLayout>

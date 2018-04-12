@@ -383,7 +383,7 @@ public class manageData {
 
                         //FUNCTION TO EXECUTE AFTER
                         try {
-                            HistoryActivity.getStudentAttendance();
+                            HistoryActivity.showHistory();
                         } catch (Exception e) {
 
                         }

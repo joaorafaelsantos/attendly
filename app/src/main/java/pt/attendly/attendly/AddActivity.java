@@ -9,6 +9,8 @@ import android.view.View;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 import pt.attendly.attendly.firebase.manageData;
@@ -96,6 +98,13 @@ public class AddActivity extends AppCompatActivity {
             android.util.Log.d("teste", "This student is missing: " + missingStudents.get(i).getName());
         }
 
+        Collections.sort(missingStudents, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return u1.getName().compareToIgnoreCase(u2.getName());
+            }
+        });
+
         studentsAdpter= new RVAdapter(missingStudents);
         mRecyclerView.setAdapter(studentsAdpter);
     }
@@ -123,8 +132,8 @@ public class AddActivity extends AppCompatActivity {
         manageData.addLog(log);
     }
 
-    public void some(View v) {
-        addStudent(0);
-        android.util.Log.d("teste", missingStudents.get(0).getName());
+    public static void some(View v, int position) {
+        addStudent(position);
+        android.util.Log.d("teste", missingStudents.get(position).getName());
     }
 }

@@ -7,19 +7,20 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cv"
-        android:layout_width="290dp"
-        android:layout_height="50dp"
+        android:layout_width="320dp"
+        android:layout_height="60dp"
         android:layout_marginBottom="10dp"
 
-        android:layout_marginEnd="61dp"
-        android:layout_marginStart="60dp"
+        android:layout_marginEnd="46dp"
+        android:layout_marginStart="45dp"
         android:layout_marginTop="10dp"
         app:cardCornerRadius="10dp"
         app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,17 +28,18 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/imageStudent"
-                android:layout_width="120dp"
+                android:id="@+id/ivPresence"
+                android:layout_width="0dp"
                 android:layout_height="match_parent"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
-                app:srcCompat="@drawable/common_google_signin_btn_icon_dark_normal" />
+                app:srcCompat="@drawable/history_green" />
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="196dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
                 android:layout_marginTop="7dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
@@ -46,28 +48,22 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/exo2_regular"
                     android:text="Name"
-                    android:textSize="15sp" />
+                    android:textSize="15sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/txtStudentNumber"
+                    android:id="@+id/txtDate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="3dp"
                     android:fontFamily="@font/exo2_light"
                     android:text="Número"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
 
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnAdd"
-                android:layout_width="100dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:background="@drawable/add_student_button"
-                android:text="+"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
-                android:textSize="30sp" />
+            </android.support.constraint.ConstraintLayout>
 
         </LinearLayout>
     </android.support.v7.widget.CardView>

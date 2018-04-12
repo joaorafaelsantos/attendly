@@ -10,6 +10,7 @@ import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -110,6 +111,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                             } else {
+                                Log.d("TASKOK", task.getException().toString());
                                 // If sign in fails, display a message to the user.
                                 loadingFrame.setVisibility(View.INVISIBLE);
                                 btnLogin.setVisibility(View.VISIBLE);

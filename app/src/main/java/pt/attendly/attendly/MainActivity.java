@@ -3,16 +3,28 @@ package pt.attendly.attendly;
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.CountDownTimer;
 import android.os.RemoteException;
 import android.support.annotation.NonNull;
+import android.support.design.internal.BottomNavigationMenuView;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.altbeacon.beacon.Beacon;
@@ -39,6 +51,7 @@ import pt.attendly.attendly.model.Log;
 import pt.attendly.attendly.model.Schedule;
 import pt.attendly.attendly.model.Subject;
 import pt.attendly.attendly.model.User;
+import pt.attendly.attendly.other.layoutChanges;
 
 public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
@@ -49,7 +62,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     private boolean presença, tempo, classOpen;
     static boolean read = false;
 
+    static FrameLayout frame_loading;
+    static LinearLayout card_layout;
+    static ImageView ivLoading;
+    static AnimationDrawable loading_animation;
+    static ImageView ivLogoPresence;
+    static TextView txtEstado;
 
+    static Button btnManageClass;
 
     static ArrayList<Card> cards = new ArrayList<>();
     static TextView aula, sala, hora, dateTime, curso;
@@ -94,9 +114,21 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         hora = findViewById(R.id.txtTime);
         cardView = findViewById(R.id.cardView);
 
+        frame_loading = findViewById(R.id.frame_loading);
+        card_layout = findViewById(R.id.card_layout);
+        ivLoading = findViewById(R.id.ivLoading);
+        ivLogoPresence = findViewById(R.id.ivLogoPresence);
+        txtEstado = findViewById(R.id.txtEstado);
+
+        btnManageClass = findViewById(R.id.btnManageClass);
+
         BottomNavigationView mBottomNavigationView = (BottomNavigationView) findViewById(R.id.navigation);
         mBottomNavigationView.getMenu().findItem(R.id.navigation_home).setChecked(true);
         mBottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        layoutChanges.setIconSize(mBottomNavigationView, this);
+
+        loading_animation = (AnimationDrawable) ivLoading.getDrawable();
+        loading_animation.start();
 
         manageData.getMainActivityData();
 
@@ -176,6 +208,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                 android.util.Log.d("user6", cards.get(0).getSubjectBeginning());
 
                                 if (log.after(begining) && log.before(tolerance)) {
+                                    btnManageClass.setVisibility(View.VISIBLE);
                                     open = true;
                                 }
                             }
@@ -298,11 +331,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
                                                         String idUser = LoginActivity.loggedUser.getId();
                                                         // obter o id da aula
-                                                        int idSubject= cards.get(0).getSubjectId();
+                                                        int idSubject = cards.get(0).getSubjectId();
                                                         // obter o id aula
-                                                        int idClass= cards.get(0).getSubjectClassroomID();
+                                                        int idClass = cards.get(0).getSubjectClassroomID();
                                                         // obter o id do horario
-                                                        int idSchedule= cards.get(0).getSubjectSchedule();
+                                                        int idSchedule = cards.get(0).getSubjectSchedule();
                                                         // obter a data atual
                                                         Date currentDate = new Date();
                                                         Calendar c = Calendar.getInstance();
@@ -352,16 +385,6 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
     }
 
-    public void openHistoryActivity(View view) {
-        Intent intent = new Intent(this, HistoryActivity.class);
-        startActivity(intent);
-    }
-
-    public void openProfile(View view) {
-        Intent intent = new Intent(this, ProfileActivity.class);
-        startActivity(intent);
-    }
-
     public void openManagerClass(View view) {
         Intent intent = new Intent(this, ManagerActivity.class);
         startActivity(intent);
@@ -397,6 +420,9 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     // Method to return the current card (with the current or the next subject of that day)
     public static void getCurrentCard() {
+
+
+        loading_animation.start();
 
         data = false;
         // Load the data
@@ -530,6 +556,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             android.util.Log.d("count1", String.valueOf(totalClasses));
             android.util.Log.d("count", "No more classes today");
             aula.setText("Não tem aula");
+            sala.setText("");
+            hora.setText("");
+            dateTime.setText("");
+            curso.setText("");
+            frame_loading.setVisibility(View.INVISIBLE);
+            card_layout.setVisibility(View.VISIBLE);
+            loading_animation.stop();
+
         } else {
             android.util.Log.d("card2", String.valueOf(read));
             cards.clear();
@@ -537,8 +571,11 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             cards.add(card);
             aula.setText(cards.get(0).getSubjectName());
             sala.setText(cards.get(0).getSubjectClassroom());
-            hora.setText(cards.get(0).getSubjectBeginning()+"-"+cards.get(0).getSubjectEnding());
-            //dateTime.setText(cards.get(0).);
+            hora.setText(cards.get(0).getSubjectBeginning() + "-" + cards.get(0).getSubjectEnding());
+            Date datacard = new Date();
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
+            String dataFormated = simpleDateFormat.format(datacard);
+            dateTime.setText(dataFormated);
             curso.setText(cards.get(0).getSubjectCourse());
 
             String begining = cards.get(0).getSubjectBeginning();
@@ -553,8 +590,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         }
         read = true;
         data = true;
-        if(isCardTimerRunning == false)
-        {
+        if (isCardTimerRunning == false) {
             updateCardTimer.start();
             isCardTimerRunning = true;
         }
@@ -583,21 +619,23 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     && log.getId_user().equals(LoginActivity.loggedUser.getId())
                     && log.getId_schedule() == cards.get(0).getSubjectSchedule()
                     && log.getId_subject() == cards.get(0).getSubjectId()) {
-                android.util.Log.d("TIMEDONE", "AULA ENCONTRADA");
                 logRegistered = true;
                 presence = log.getPresence();
 
             }
 
         }
-        android.util.Log.d("TIMEDONE", "go");
         if (logRegistered) {
             if (presence == 1) {
                 //PUT GREEN LOGO AND DO WHATEVER
+                ivLogoPresence.setImageResource(R.drawable.green);
+                txtEstado.setText("Presente");
                 android.util.Log.d("TIMEDONE", "GREEN");
                 runTimer = false;
             } else {
                 //PUT RED LOGO AND DO WHATEVER
+                ivLogoPresence.setImageResource(R.drawable.red);
+                txtEstado.setText("Ausente");
                 android.util.Log.d("TIMEDONE", "RED");
                 runTimer = false;
             }
@@ -605,6 +643,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             //PUT ORANGE LOGO AND DO WHATEVER
 
             android.util.Log.d("TIMEDONE", "ORANGE");
+            ivLogoPresence.setImageResource(R.drawable.orange);
+            txtEstado.setText("Pendente");
             SimpleDateFormat df = new SimpleDateFormat("HH:mm");
 
             Date classTime = df.parse(startTime);
@@ -645,29 +685,34 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                     schedule_id = card.getSubjectSchedule();
                     classroom_id = card.getSubjectClassroomID();
                 }
-
+                ivLogoPresence.setImageResource(R.drawable.red);
+                txtEstado.setText("Ausente");
                 Log log = new Log(LoginActivity.loggedUser.getId(), "", subject_id, date, day_week, 0, classroom_id, schedule_id);
                 manageData.addLog(log);
             }
-            if(runTimer)
-            {
-                if(isAbsenceTimerRunning == false)
-                {
+            if (runTimer) {
+                if (isAbsenceTimerRunning == false) {
                     checkAbsenceTimer.start();
                     isAbsenceTimerRunning = true;
                 }
 
-            }
-            else
-            {
-                if(isAbsenceTimerRunning == true)
-                {
+            } else {
+                if (isAbsenceTimerRunning == true) {
                     isAbsenceTimerRunning = false;
                 }
 
 
             }
 
+        }
+
+        frame_loading.setVisibility(View.INVISIBLE);
+        card_layout.setVisibility(View.VISIBLE);
+        loading_animation.stop();
+
+        if(LoginActivity.loggedUser.getType() == 1)
+        {
+            btnManageClass.setVisibility(View.VISIBLE);
         }
 
     }
