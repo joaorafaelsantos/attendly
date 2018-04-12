@@ -1,12 +1,15 @@
 package pt.attendly.attendly;
 
 import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -27,11 +30,11 @@ public class ManagerActivity extends AppCompatActivity {
     public static ArrayList<User> currentStudents = new ArrayList<>();
     public static ArrayList<Log> currentLogs = new ArrayList<>();
 
-    private RecyclerView mRecyclerView;
+    private static RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private static RecyclerView.LayoutManager mLayoutManager;
     //private List<Character> charactersList;
-    private RVAdapter studentsAdpter;
+    private static RVAdapter studentsAdpter;
 
 
     @Override
@@ -40,9 +43,6 @@ public class ManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager);
         manageData.getManagerActivityData();
 
-
-
-
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
 
         // use this setting to improve performance if you know that changes
@@ -50,7 +50,7 @@ public class ManagerActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(this);
+        mLayoutManager = new LinearLayoutManager(this );
         mRecyclerView.setLayoutManager(mLayoutManager);
 
 
@@ -59,13 +59,24 @@ public class ManagerActivity extends AppCompatActivity {
         // mRecyclerView.setAdapter(mAdapter);
         //initializeDat();
 
-        studentsAdpter= new RVAdapter(currentStudents);
-        mRecyclerView.setAdapter(studentsAdpter);
+        FloatingActionButton FAB = (FloatingActionButton) findViewById(R.id.floatingActionButton);
+        FAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ManagerActivity.this, AddActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
+
+
+
 
 
     }
 
-    public static void getCurrentStudents() {
+    public static void getCurrentStudents( ) {
 
         // Clear data
         currentStudents.clear();
@@ -116,6 +127,15 @@ public class ManagerActivity extends AppCompatActivity {
         for (int i = 0; i<currentStudents.size(); i++) {
             android.util.Log.d("teste", "This student is on the class: " + currentStudents.get(i).getName());
         }
+
+        android.util.Log.d("teste", "This student is on the class: " + currentStudents.size());
+
+
+
+
+
+        studentsAdpter= new RVAdapter(currentStudents);
+        mRecyclerView.setAdapter(studentsAdpter);
     }
 
     // Date parse method
@@ -130,6 +150,7 @@ public class ManagerActivity extends AppCompatActivity {
             return null;
         }
     }
+
 
     // Open activity handler
     public void openAddActivity(View view) {

@@ -36,6 +36,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
 
     List<User> studentsList;
 
+
     RVAdapter(List<User> studentsList){
         this.studentsList = studentsList;
     }
@@ -49,6 +50,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
     public StudentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
         StudentsViewHolder cvh = new StudentsViewHolder(v);
+        android.util.Log.d("size",String.valueOf(getItemCount()));
         return cvh;
 
     }
