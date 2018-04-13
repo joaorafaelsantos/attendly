@@ -21,11 +21,11 @@ import pt.attendly.attendly.model.User;
 public class AddActivity extends AppCompatActivity {
 
     public static ArrayList<User> missingStudents = new ArrayList<>();
+    public static ArrayList<User> currentStudents = new ArrayList<>();
 
     private static RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private static RecyclerView.LayoutManager mLayoutManager;
-    //private List<Character> charactersList;
     private static RVAdapter studentsAdpter;
 
 
@@ -77,7 +77,7 @@ public class AddActivity extends AppCompatActivity {
         }
 
         // Load the current students on the class
-        ArrayList<User> currentStudents = ManagerActivity.currentStudents;
+        currentStudents = ManagerActivity.currentStudents;
 
         // Copy the available students to the missing students array
         missingStudents = new ArrayList<>(availableStudents);
@@ -130,10 +130,16 @@ public class AddActivity extends AppCompatActivity {
         // Log to add
         Log log = new Log(userToAdd.getId(), "", idSubject, dataFormated, day , 1, idClass, idSchedule);
         manageData.addLog(log);
+
+        // Remove the student in the missing students array
+        missingStudents.remove(userToAdd);
+        currentStudents.add(userToAdd);
+        ManagerActivity.currentStudents = currentStudents;
+
     }
 
     public static void some(View v, int position) {
-        addStudent(position);
         android.util.Log.d("teste", missingStudents.get(position).getName());
+        addStudent(position);
     }
 }

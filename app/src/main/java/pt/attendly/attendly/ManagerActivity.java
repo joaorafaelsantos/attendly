@@ -76,6 +76,20 @@ public class ManagerActivity extends AppCompatActivity {
 
     }
 
+    // Flag to verifiy if the on resume event is called only after the first time that is executed
+    // This flag is needed to verify the back button pressed on the Add Activity to refresh the data
+    int magicFlag = 0;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (magicFlag >= 1) {
+            getCurrentStudents();
+        }
+        magicFlag++;
+
+    }
+
     public static void getCurrentStudents( ) {
 
         // Clear data
@@ -176,7 +190,7 @@ public class ManagerActivity extends AppCompatActivity {
 
     // To replace by the RecyclerView position
     public void some (View v) {
-    removePresence(0);
+        removePresence(0);
     }
 
 
