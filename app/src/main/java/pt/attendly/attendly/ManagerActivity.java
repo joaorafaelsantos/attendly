@@ -76,8 +76,8 @@ public class ManagerActivity extends AppCompatActivity {
 
     }
 
-    // Flag to verifiy if the on resume event is called only after the first time that is executed
-    // This flag is needed to verify the back button pressed on the Add Activity to refresh the data
+    // Flag to verify if the on resume event is called only after the first time that is executed
+    // This flag is needed to verify if the back button was pressed on the Add Activity to refresh the data
     int magicFlag = 0;
 
     @Override
