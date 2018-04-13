@@ -204,7 +204,11 @@ public class ManagerActivity extends AppCompatActivity {
         }
         manageData.updateLog(logToChangeID, 0);
         currentStudents.remove(userToDelete);
+        AddActivity.missingStudents.add(userToDelete);
 //        android.util.Log.d("teste", String.valueOf(currentStudents.size()));
+
+        txtStudents.setText("Alunos presentes: " + String.valueOf(currentStudents.size()) + "/" + String.valueOf(currentStudents.size() + AddActivity.missingStudents.size()));
+
         studentsAdpter = new RVAdapter(currentStudents, "Manager");
         mRecyclerView.setAdapter(studentsAdpter);
 
