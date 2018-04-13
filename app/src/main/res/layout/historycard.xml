@@ -36,9 +36,10 @@
                 app:srcCompat="@drawable/history_green" />
 
             <android.support.constraint.ConstraintLayout
-                android:layout_width="196dp"
+                android:layout_width="240dp"
                 android:layout_height="match_parent"
                 android:layout_marginTop="7dp"
+                android:layout_marginRight="10dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -48,6 +49,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/exo2_regular"
                     android:text="Name"
+                    android:textColor="@color/colorBlack"
                     android:textSize="15sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -59,6 +61,7 @@
                     android:layout_marginBottom="3dp"
                     android:fontFamily="@font/exo2_light"
                     android:text="Número"
+                    android:textColor="@android:color/black"
                     android:textSize="12sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />

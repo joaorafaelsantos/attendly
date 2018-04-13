@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -36,11 +39,16 @@ public class ManagerActivity extends AppCompatActivity {
     //private List<Character> charactersList;
     private static RVAdapter studentsAdpter;
 
+    static TextView txtStudents;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manager);
+
+        txtStudents = findViewById(R.id.txtStudents);
+
         manageData.getManagerActivityData();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerView);
@@ -76,8 +84,8 @@ public class ManagerActivity extends AppCompatActivity {
 
     }
 
-    // Flag to verifiy if the on resume event is called only after the first time that is executed
-    // This flag is needed to verify the back button pressed on the Add Activity to refresh the data
+    // Flag to verify if the on resume event is called only after the first time that is executed
+    // This flag is needed to verify if the back button was pressed on the Add Activity to refresh the data
     int magicFlag = 0;
 
     @Override
@@ -144,11 +152,20 @@ public class ManagerActivity extends AppCompatActivity {
 
         android.util.Log.d("teste", "This student is on the class: " + currentStudents.size());
 
+        AddActivity.getStudentsArray();
 
 
 
+        txtStudents.setText("Alunos presentes: " + String.valueOf(currentStudents.size()) + "/" + String.valueOf(currentStudents.size() + AddActivity.missingStudents.size()));
 
-        studentsAdpter= new RVAdapter(currentStudents);
+        Collections.sort(currentStudents, new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                return u1.getName().compareToIgnoreCase(u2.getName());
+            }
+        });
+
+        studentsAdpter = new RVAdapter(currentStudents, "Manager");
         mRecyclerView.setAdapter(studentsAdpter);
     }
 
@@ -173,7 +190,7 @@ public class ManagerActivity extends AppCompatActivity {
     }
 
     // Method to remove the presence of the student
-    public void removePresence(int id) {
+    public static void removePresence(int id) {
 
         // Get the student to delete
         User userToDelete = currentStudents.get(id);
@@ -185,12 +202,17 @@ public class ManagerActivity extends AppCompatActivity {
                 logToChangeID = currentLogs.get(i).getLogID();
             }
         }
-        manageData.updateLog(logToChangeID);
+        manageData.updateLog(logToChangeID, 0);
+        currentStudents.remove(userToDelete);
+//        android.util.Log.d("teste", String.valueOf(currentStudents.size()));
+        studentsAdpter = new RVAdapter(currentStudents, "Manager");
+        mRecyclerView.setAdapter(studentsAdpter);
+
     }
 
     // To replace by the RecyclerView position
-    public void some (View v) {
-        removePresence(0);
+    public static void some(View v, int position) {
+        removePresence(position);
     }
 
 

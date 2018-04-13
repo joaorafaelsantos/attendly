@@ -8,6 +8,35 @@
     tools:context="pt.attendly.attendly.ManagerActivity"
     tools:layout_editor_absoluteY="81dp">
 
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="top"
+        android:background="@android:color/white"
+        android:fontFamily="@font/sacramento"
+        android:text="Attendly"
+        android:textAlignment="center"
+        android:textColor="@color/attendlyRed"
+        android:textSize="36sp"
+        app:layout_editor_absoluteY="0sp" />
+
+    <TextView
+        android:id="@+id/txtStudents"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="@font/exo2_regular"
+        android:text="Alunos presentes: --/--"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/recyclerView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
     <Button
         android:id="@+id/button9"
         android:layout_width="wrap_content"
@@ -41,6 +70,8 @@
         android:layout_marginBottom="36dp"
         android:layout_marginEnd="32dp"
         android:clickable="true"
+        android:tint="@color/attendlyRed"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add"
@@ -49,11 +80,12 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="550dp"
         android:clipToPadding="false"
         android:onClick="openAddActivity"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:onClick="openAddActivity" />
 
 </android.support.constraint.ConstraintLayout>

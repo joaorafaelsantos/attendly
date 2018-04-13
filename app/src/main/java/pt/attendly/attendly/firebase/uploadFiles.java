@@ -28,7 +28,7 @@ public class uploadFiles {
     public static void upload(final Context con, Uri filePath){
             //displaying a progress dialog while upload is going on
             final ProgressDialog progressDialog = new ProgressDialog(con);
-            progressDialog.setTitle("Uploading");
+            progressDialog.setTitle("Carregar");
             progressDialog.show();
 
             StorageReference riversRef = storageReference.child(LoginActivity.loggedUser.getId());
@@ -44,7 +44,7 @@ public class uploadFiles {
                             manageData.updateUserImage(downloadUrl);
 
                             //and displaying a success toast
-                            Toast.makeText(con.getApplicationContext(), "File Uploaded ", Toast.LENGTH_LONG).show();
+                            Toast.makeText(con.getApplicationContext(), "Imagem alterada com sucesso!", Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -65,7 +65,7 @@ public class uploadFiles {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
 
                             //displaying percentage in progress dialog
-                            progressDialog.setMessage("Uploaded " + ((int) progress) + "%...");
+                            progressDialog.setMessage("A carregar " + ((int) progress) + "%...");
                         }
                     });
         }

@@ -52,7 +52,7 @@ public class LaunchingActivity extends AppCompatActivity {
 
     }
 
-    CountDownTimer cdt = new CountDownTimer(2000, 2000) {
+    CountDownTimer cdt = new CountDownTimer(3000, 3000) {
         @Override
         public void onTick(long l) {
 

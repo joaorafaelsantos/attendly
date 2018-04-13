@@ -48,6 +48,14 @@ public class AddActivity extends AppCompatActivity {
 
     public static void getMissingStudents() {
 
+        getStudentsArray();
+
+        studentsAdpter= new RVAdapter(missingStudents, "Add");
+        mRecyclerView.setAdapter(studentsAdpter);
+    }
+
+    public static void getStudentsArray(){
+
         // Clear data
         missingStudents.clear();
 
@@ -105,8 +113,6 @@ public class AddActivity extends AppCompatActivity {
             }
         });
 
-        studentsAdpter= new RVAdapter(missingStudents);
-        mRecyclerView.setAdapter(studentsAdpter);
     }
 
     public static void addStudent (int id) {
@@ -127,9 +133,38 @@ public class AddActivity extends AppCompatActivity {
         c.setTime(date);
         int day = c.get(Calendar.DAY_OF_WEEK);
 
-        // Log to add
-        Log log = new Log(userToAdd.getId(), "", idSubject, dataFormated, day , 1, idClass, idSchedule);
-        manageData.addLog(log);
+        ArrayList<Log> logs = manageData.logs;
+        Card card = MainActivity.cards.get(0);
+
+        String logID = "";
+
+        for(Log log : logs)
+        {
+
+            String[] tempdate = log.getDate().split(" ");
+
+            if(log.getId_user().equals(userToAdd.getId())
+                    && card.getSubjectId() == log.getId_subject()
+                    && card.getSubjectSchedule() == log.getId_schedule()
+                    && card.getSubjectClassroomID() == log.getId_classroom()
+                    && tempdate[0].equals(dataFormated.split(" ")[0]))
+            {
+                logID = log.getLogID();
+            }
+        }
+
+        if(logID.equals(""))
+        {
+            // Log to add
+            Log log = new Log(userToAdd.getId(), "", idSubject, dataFormated, day , 1, idClass, idSchedule);
+            manageData.addLog(log);
+        }
+        else
+        {
+            manageData.updateLog(logID, 1);
+        }
+
+
 
         // Remove the student in the missing students array
         missingStudents.remove(userToAdd);

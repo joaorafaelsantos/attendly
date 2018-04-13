@@ -31,19 +31,20 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
 
         StudentsViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
-            name = (TextView)itemView.findViewById(R.id.txtSubject);
-            studentNumber = (TextView)itemView.findViewById(R.id.txtStudentNumber);
-            imageStudent = (ImageView)itemView.findViewById(R.id.imageStudent);
+            cv = (CardView) itemView.findViewById(R.id.cv);
+            name = (TextView) itemView.findViewById(R.id.txtSubject);
+            studentNumber = (TextView) itemView.findViewById(R.id.txtStudentNumber);
+            imageStudent = (ImageView) itemView.findViewById(R.id.imageStudent);
             btnAdd = itemView.findViewById(R.id.btnAdd);
         }
     }
 
     List<User> studentsList;
+    String page = "";
 
-
-    RVAdapter(List<User> studentsList){
+    RVAdapter(List<User> studentsList, String page) {
         this.studentsList = studentsList;
+        this.page = page;
     }
 
     @Override
@@ -53,9 +54,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
 
     @Override
     public StudentsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardview, parent, false);
         StudentsViewHolder cvh = new StudentsViewHolder(v);
-        android.util.Log.d("size",String.valueOf(getItemCount()));
+        android.util.Log.d("size", String.valueOf(getItemCount()));
         return cvh;
 
     }
@@ -65,12 +67,23 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
         holder.name.setText(studentsList.get(position).getName());
         holder.studentNumber.setText(studentsList.get(position).getNumber());
         Picasso.get().load(studentsList.get(position).getUrl_picture()).into(holder.imageStudent);
-        holder.btnAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AddActivity.some(v, position);
-            }
-        });
+        if (page.equals("Manager")) {
+            holder.btnAdd.setText("X");
+            holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ManagerActivity.some(v, position);
+                }
+            });
+        } else {
+            holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AddActivity.some(v, position);
+                }
+            });
+        }
+
 
     }
 }

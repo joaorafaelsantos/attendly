@@ -2,6 +2,7 @@ package pt.attendly.attendly;
 
 import android.app.NotificationManager;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
@@ -78,6 +79,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
     static boolean subjectExists = false, noClass = false;
 
+    Context context = this;
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -148,6 +151,15 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
         beaconManager.unbind(this);
     }
 
+    private void unbindBT()
+    {
+        beaconManager.unbind(this);
+    }
+
+    private void bindBT(){
+        beaconManager.bind(this);
+    }
+
     public static boolean checkIfTimeOfClass(String classBegining, String classEnd) {
         boolean time = false;
         final long ONE_MINUTE_IN_MILLIS = 60000;//millisecs
@@ -208,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                 android.util.Log.d("user6", cards.get(0).getSubjectBeginning());
 
                                 if (log.after(begining) && log.before(tolerance)) {
-                                    btnManageClass.setVisibility(View.VISIBLE);
+//                                    btnManageClass.setVisibility(View.VISIBLE);
                                     open = true;
                                 }
                             }
@@ -344,6 +356,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                                                         int day = c.get(Calendar.DAY_OF_WEEK);
 
                                                         // Registar na BD
+                                                        unbindBT();
+                                                        timerBindBT.start();
                                                         Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
                                                         manageData.addLog(log);
                                                         // Enviar notificação
@@ -635,14 +649,12 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             } else {
                 //PUT RED LOGO AND DO WHATEVER
                 ivLogoPresence.setImageResource(R.drawable.red);
-                txtEstado.setText("Ausente");
+                txtEstado.setText("Falta");
                 android.util.Log.d("TIMEDONE", "RED");
                 runTimer = false;
             }
         } else {
             //PUT ORANGE LOGO AND DO WHATEVER
-
-            android.util.Log.d("TIMEDONE", "ORANGE");
             ivLogoPresence.setImageResource(R.drawable.orange);
             txtEstado.setText("Pendente");
             SimpleDateFormat df = new SimpleDateFormat("HH:mm");
@@ -750,6 +762,18 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             getCurrentCard();
 
             start();
+        }
+    };
+
+    CountDownTimer timerBindBT = new CountDownTimer(60000, 60000) {
+        @Override
+        public void onTick(long l) {
+
+        }
+
+        @Override
+        public void onFinish() {
+            bindBT();
         }
     };
 

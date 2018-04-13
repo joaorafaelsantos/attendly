@@ -97,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity  {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Selecione uma imagem:"), PICK_IMAGE_REQUEST);
     }
 
     //handling the image chooser activity result
@@ -122,7 +122,7 @@ public class ProfileActivity extends AppCompatActivity  {
     {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("verifying..");
+        progressDialog.setMessage("A verificar..");
         progressDialog.show();
 
         mAuth.sendPasswordResetEmail(LoginActivity.loggedUser.getEmail())
@@ -131,12 +131,12 @@ public class ProfileActivity extends AppCompatActivity  {
                     public void onComplete(@NonNull Task<Void> task) {
                         if(task.isSuccessful()){
                             progressDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), "Reset password instructions has sent to your email",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Instruções de alterar palavra-passe enviadas para o email!",
+                                    Toast.LENGTH_LONG).show();
                         }else{
                             progressDialog.dismiss();
                             Toast.makeText(getApplicationContext(),
-                                    "Email don't exist", Toast.LENGTH_SHORT).show();
+                                    "Email não existente!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
