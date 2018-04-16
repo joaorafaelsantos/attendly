@@ -11,6 +11,12 @@
     <uses-permission
         android:name="android.permission.INTERNET"
         android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_FINE_LOCATION"
+        android:required="true" />
+    <uses-permission
+        android:name="android.permission.ACCESS_COARSE_LOCATION"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -19,7 +25,8 @@
         android:roundIcon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LaunchingActivity"
+        <activity
+            android:name=".LaunchingActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
             <intent-filter>
@@ -28,24 +35,30 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
-        <activity android:name=".LoginActivity"
+            android:theme="@style/loginNoTitle" />
+        <activity
+            android:name=".LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
-        <activity android:name=".HistoryActivity"
+            android:theme="@style/loginNoTitle" />
+        <activity
+            android:name=".HistoryActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
-        <activity android:name=".ProfileActivity"
+            android:theme="@style/loginNoTitle" />
+        <activity
+            android:name=".ProfileActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
-        <activity android:name=".ManagerActivity"
+            android:theme="@style/loginNoTitle" />
+        <activity
+            android:name=".ManagerActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
-        <activity android:name=".AddActivity"
+            android:theme="@style/loginNoTitle" />
+        <activity
+            android:name=".AddActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/loginNoTitle"/>
+            android:theme="@style/loginNoTitle" />
     </application>
 
 </manifest>

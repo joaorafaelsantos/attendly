@@ -8,6 +8,57 @@
     tools:context="pt.attendly.attendly.AddActivity"
     tools:layout_editor_absoluteY="0dp">
 
+    <FrameLayout
+        android:id="@+id/loading_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tvInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="195dp"
+                android:layout_marginEnd="122dp"
+                android:layout_marginStart="123dp"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/exo2_light"
+                android:text="Não há alunos a adicionar!"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.51"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.716" />
+
+            <ImageView
+                android:id="@+id/ivLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="230dp"
+                android:layout_marginEnd="106dp"
+                android:layout_marginStart="105dp"
+                android:layout_marginTop="229dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/loading_animation_white" />
+        </android.support.constraint.ConstraintLayout>
+
+    </FrameLayout>
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="match_parent"

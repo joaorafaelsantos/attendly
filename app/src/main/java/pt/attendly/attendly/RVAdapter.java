@@ -68,7 +68,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.StudentsViewHolder
         holder.studentNumber.setText(studentsList.get(position).getNumber());
         Picasso.get().load(studentsList.get(position).getUrl_picture()).into(holder.imageStudent);
         if (page.equals("Manager")) {
-            holder.btnAdd.setText("X");
+            holder.btnAdd.setText("x");
             holder.btnAdd.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

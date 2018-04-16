@@ -19,6 +19,7 @@ import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -27,6 +28,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -93,12 +95,14 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                 case R.id.navigation_historic:
                     Intent intent2 = new Intent(getApplicationContext(), HistoryActivity.class);
                     startActivity(intent2);
+                    overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
 
                     return true;
                 case R.id.navigation_profile:
 
                     Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
 
                     return true;
             }
@@ -144,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
 
     }
+
 
     @Override
     protected void onDestroy() {
@@ -317,119 +322,122 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
                         if (beacon.getDistance() <= 2.5) {
                             // Obter o macaddress do beacon ; verificar qual é o mac address da sala da proxima aula ; comparar os dos mac address
                             // verificar se o beacon detetado corresponde com o da sala
-                            if (beacons.iterator().next().getBluetoothAddress().equals("C1:BA:B4:A2:1C:B3")) {
+                            if (cards.size() > 0) {
 
 
-                                Integer typeUser = LoginActivity.loggedUser.getType();
+                                if (beacons.iterator().next().getBluetoothAddress().equals(cards.get(0).getSubjectBeacon())) {
 
 
-                                if (data == true) {
-                                    if (cards.size() > 0) {
-                                        String begining = cards.get(0).getSubjectBeginning();
-                                        String end = cards.get(0).getSubjectEnding();
-                                        // Verificar se está na hora da aula
-                                        if (checkIfTimeOfClass(begining, end) == true) {
-                                            // verificar se é estudante ou professor
-                                            if (typeUser == 0) {
-                                                // verificar se prof abriu a aula
+                                    Integer typeUser = LoginActivity.loggedUser.getType();
 
-                                                // Verificar se a aula está aberta
-                                                if (checkIfClassOpen(begining, end) == true) {
 
-                                                    // verificar se o bluethooth não foi registo naquela aula
-                                                    if (checkBluetooth(begining, bluetooth) == false) {
+                                    if (data == true) {
+                                        if (cards.size() > 0) {
+                                            String begining = cards.get(0).getSubjectBeginning();
+                                            String end = cards.get(0).getSubjectEnding();
+                                            // Verificar se está na hora da aula
+                                            if (checkIfTimeOfClass(begining, end) == true) {
+                                                // verificar se é estudante ou professor
+                                                if (typeUser == 0) {
+                                                    // verificar se prof abriu a aula
 
-                                                        //verificar se não tem falta
-                                                        if (missClass(begining, LoginActivity.loggedUser.getId()) == false) {
-                                                            // registar
-                                                            Date date = new Date();
-                                                            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                                                            String dataFormated = simpleDateFormat.format(date);
+                                                    // Verificar se a aula está aberta
+                                                    if (checkIfClassOpen(begining, end) == true) {
 
-                                                            String idUser = LoginActivity.loggedUser.getId();
-                                                            // obter o id da aula
-                                                            int idSubject = cards.get(0).getSubjectId();
-                                                            // obter o id aula
-                                                            int idClass = cards.get(0).getSubjectClassroomID();
-                                                            // obter o id do horario
-                                                            int idSchedule = cards.get(0).getSubjectSchedule();
-                                                            // obter a data atual
-                                                            Date currentDate = new Date();
-                                                            Calendar c = Calendar.getInstance();
-                                                            c.setTime(currentDate);
-                                                            // obter o dia da semana
-                                                            int day = c.get(Calendar.DAY_OF_WEEK);
+                                                        // verificar se o bluethooth não foi registo naquela aula
+                                                        if (checkBluetooth(begining, bluetooth) == false) {
 
-                                                            // Registar na BD
-                                                            unbindBT();
-                                                            timerBindBT.start();
-                                                            Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
-                                                            manageData.addLog(log);
-                                                            // Enviar notificação
+                                                            //verificar se não tem falta
+                                                            if (missClass(begining, LoginActivity.loggedUser.getId()) == false) {
+                                                                // registar
+                                                                Date date = new Date();
+                                                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                                                String dataFormated = simpleDateFormat.format(date);
 
-                                                            // Comunicação do resultado via notificações
-                                                            NotificationCompat.Builder mBuilder =
-                                                                    new NotificationCompat.Builder(getApplicationContext())
-                                                                            .setSmallIcon(R.mipmap.ic_launcher)
-                                                                            .setContentTitle("Attendly")
-                                                                            .setContentText("Presença Registada com Sucesso");
-                                                            NotificationManager nm = (NotificationManager)
-                                                                    getSystemService(NOTIFICATION_SERVICE);
-                                                            nm.notify(1, mBuilder.build());
+                                                                String idUser = LoginActivity.loggedUser.getId();
+                                                                // obter o id da aula
+                                                                int idSubject = cards.get(0).getSubjectId();
+                                                                // obter o id aula
+                                                                int idClass = cards.get(0).getSubjectClassroomID();
+                                                                // obter o id do horario
+                                                                int idSchedule = cards.get(0).getSubjectSchedule();
+                                                                // obter a data atual
+                                                                Date currentDate = new Date();
+                                                                Calendar c = Calendar.getInstance();
+                                                                c.setTime(currentDate);
+                                                                // obter o dia da semana
+                                                                int day = c.get(Calendar.DAY_OF_WEEK);
 
+                                                                // Registar na BD
+                                                                unbindBT();
+                                                                timerBindBT.start();
+                                                                Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
+                                                                manageData.addLog(log);
+                                                                // Enviar notificação
+
+                                                                // Comunicação do resultado via notificações
+                                                                NotificationCompat.Builder mBuilder =
+                                                                        new NotificationCompat.Builder(getApplicationContext())
+                                                                                .setSmallIcon(R.mipmap.ic_launcher)
+                                                                                .setContentTitle("Attendly")
+                                                                                .setContentText("Presença Registada com Sucesso");
+                                                                NotificationManager nm = (NotificationManager)
+                                                                        getSystemService(NOTIFICATION_SERVICE);
+                                                                nm.notify(1, mBuilder.build());
+
+                                                            }
                                                         }
+                                                    }
+                                                } else {
+
+                                                    if (checkIfClassOpen(begining, end) == false) {
+
+                                                        Date date = new Date();
+                                                        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                                                        String dataFormated = simpleDateFormat.format(date);
+
+                                                        String idUser = LoginActivity.loggedUser.getId();
+                                                        // obter o id da aula
+                                                        int idSubject = cards.get(0).getSubjectId();
+                                                        // obter o id aula
+                                                        int idClass = cards.get(0).getSubjectClassroomID();
+                                                        // obter o id do horario
+                                                        int idSchedule = cards.get(0).getSubjectSchedule();
+                                                        // obter a data atual
+                                                        Date currentDate = new Date();
+                                                        Calendar c = Calendar.getInstance();
+                                                        c.setTime(currentDate);
+                                                        // obter o dia da semana
+                                                        int day = c.get(Calendar.DAY_OF_WEEK);
+
+                                                        // Registar na BD
+                                                        unbindBT();
+                                                        timerBindBT.start();
+                                                        Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
+                                                        manageData.addLog(log);
+                                                        // Enviar notificação
+
+                                                        // Comunicação do resultado via notificações
+                                                        NotificationCompat.Builder mBuilder =
+                                                                new NotificationCompat.Builder(getApplicationContext())
+                                                                        .setSmallIcon(R.mipmap.ic_launcher)
+                                                                        .setContentTitle("Attendly")
+                                                                        .setContentText("Presença Registada com Sucesso");
+                                                        NotificationManager nm = (NotificationManager)
+                                                                getSystemService(NOTIFICATION_SERVICE);
+                                                        nm.notify(1, mBuilder.build());
+
+
                                                     }
                                                 }
                                             }
-                                            else {
-
-                                                if (checkIfClassOpen(begining, end) == false) {
-
-                                                    Date date = new Date();
-                                                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                                                    String dataFormated = simpleDateFormat.format(date);
-
-                                                    String idUser = LoginActivity.loggedUser.getId();
-                                                    // obter o id da aula
-                                                    int idSubject = cards.get(0).getSubjectId();
-                                                    // obter o id aula
-                                                    int idClass = cards.get(0).getSubjectClassroomID();
-                                                    // obter o id do horario
-                                                    int idSchedule = cards.get(0).getSubjectSchedule();
-                                                    // obter a data atual
-                                                    Date currentDate = new Date();
-                                                    Calendar c = Calendar.getInstance();
-                                                    c.setTime(currentDate);
-                                                    // obter o dia da semana
-                                                    int day = c.get(Calendar.DAY_OF_WEEK);
-
-                                                    // Registar na BD
-                                                    unbindBT();
-                                                    timerBindBT.start();
-                                                    Log log = new Log(idUser, bluetooth, idSubject, dataFormated, day, 1, idClass, idSchedule);
-                                                    manageData.addLog(log);
-                                                    // Enviar notificação
-
-                                                    // Comunicação do resultado via notificações
-                                                    NotificationCompat.Builder mBuilder =
-                                                            new NotificationCompat.Builder(getApplicationContext())
-                                                                    .setSmallIcon(R.mipmap.ic_launcher)
-                                                                    .setContentTitle("Attendly")
-                                                                    .setContentText("Presença Registada com Sucesso");
-                                                    NotificationManager nm = (NotificationManager)
-                                                            getSystemService(NOTIFICATION_SERVICE);
-                                                    nm.notify(1, mBuilder.build());
-
-
-                                                }
                                         }
+
+
                                     }
+                                    android.util.Log.i(TAG2, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
+                                    android.util.Log.i(TAG, "The beacon " + beacons.iterator().next().getBluetoothAddress() + " bluetooth");
                                 }
-
-
-                                }
-                                android.util.Log.i(TAG2, "The first beacon I see is about " + beacons.iterator().next().getDistance() + " meters away.");
-                                android.util.Log.i(TAG, "The beacon " + beacons.iterator().next().getBluetoothAddress() + " bluetooth");
                             }
                         }
                         android.util.Log.i(TAG, "BT Device" + getBluetoothMacAddress());
@@ -452,6 +460,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     public void openManagerClass(View view) {
         Intent intent = new Intent(this, ManagerActivity.class);
         startActivity(intent);
+        overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
     }
 
     private String getBluetoothMacAddress() {
@@ -699,7 +708,7 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
             } else {
                 //PUT RED LOGO AND DO WHATEVER
                 ivLogoPresence.setImageResource(R.drawable.red);
-                txtEstado.setText("Falta");
+                txtEstado.setText("Ausente");
                 android.util.Log.d("TIMEDONE", "RED");
                 runTimer = false;
             }
@@ -831,6 +840,37 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     @Override
     public void onBackPressed() {
 //        this.finishAffinity();
+    }
+
+    private float x1, x2;
+    static final int MIN_DISTANCE = 150;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    if (x1 > x2) {
+
+                        Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
+                    } else {
+
+                        Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+                    }
+
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
 

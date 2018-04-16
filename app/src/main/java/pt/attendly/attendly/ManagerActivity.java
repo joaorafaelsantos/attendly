@@ -1,6 +1,7 @@
 package pt.attendly.attendly;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.format.DateFormat;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +43,11 @@ public class ManagerActivity extends AppCompatActivity {
 
     static TextView txtStudents;
 
+    static ImageView ivLoading;
+    static TextView tvInfo;
+
+    static AnimationDrawable loading_animation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,11 @@ public class ManagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_manager);
 
         txtStudents = findViewById(R.id.txtStudents);
+
+        ivLoading = findViewById(R.id.ivLoading);
+        tvInfo = findViewById(R.id.tvInfo);
+        loading_animation = (AnimationDrawable) ivLoading.getDrawable();
+        loading_animation.start();
 
         manageData.getManagerActivityData();
 
@@ -73,6 +85,7 @@ public class ManagerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ManagerActivity.this, AddActivity.class);
                 startActivity(intent);
+                overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
             }
         });
 
@@ -82,6 +95,12 @@ public class ManagerActivity extends AppCompatActivity {
 
 
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
     }
 
     // Flag to verify if the on resume event is called only after the first time that is executed
@@ -99,6 +118,9 @@ public class ManagerActivity extends AppCompatActivity {
     }
 
     public static void getCurrentStudents( ) {
+
+        tvInfo.setVisibility(View.INVISIBLE);
+        ivLoading.setVisibility(View.VISIBLE);
 
         // Clear data
         currentStudents.clear();
@@ -167,6 +189,12 @@ public class ManagerActivity extends AppCompatActivity {
 
         studentsAdpter = new RVAdapter(currentStudents, "Manager");
         mRecyclerView.setAdapter(studentsAdpter);
+
+        if(currentStudents.size() == 0)
+        {
+            tvInfo.setVisibility(View.VISIBLE);
+        }
+        ivLoading.setVisibility(View.INVISIBLE);
     }
 
     // Date parse method
@@ -182,12 +210,6 @@ public class ManagerActivity extends AppCompatActivity {
         }
     }
 
-
-    // Open activity handler
-    public void openAddActivity(View view) {
-        Intent intent = new Intent(this, AddActivity.class);
-        startActivity(intent);
-    }
 
     // Method to remove the presence of the student
     public static void removePresence(int id) {
@@ -211,6 +233,11 @@ public class ManagerActivity extends AppCompatActivity {
 
         studentsAdpter = new RVAdapter(currentStudents, "Manager");
         mRecyclerView.setAdapter(studentsAdpter);
+
+        if(currentStudents.size() == 0)
+        {
+            tvInfo.setVisibility(View.VISIBLE);
+        }
 
     }
 

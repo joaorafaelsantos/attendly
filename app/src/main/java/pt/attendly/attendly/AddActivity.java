@@ -1,10 +1,13 @@
 package pt.attendly.attendly;
 
+import android.graphics.drawable.AnimationDrawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -28,11 +31,22 @@ public class AddActivity extends AppCompatActivity {
     private static RecyclerView.LayoutManager mLayoutManager;
     private static RVAdapter studentsAdpter;
 
+    static ImageView ivLoading;
+    static TextView tvInfo;
+
+    static AnimationDrawable loading_animation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+
+        ivLoading = findViewById(R.id.ivLoading);
+        tvInfo = findViewById(R.id.tvInfo);
+        loading_animation = (AnimationDrawable) ivLoading.getDrawable();
+        loading_animation.start();
+
         manageData.getAddActivityData();
 
         mRecyclerView = (RecyclerView) findViewById(R.id.reciclerView2);
@@ -46,12 +60,23 @@ public class AddActivity extends AppCompatActivity {
         mRecyclerView.setLayoutManager(mLayoutManager);
     }
 
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.slide_out_left, R.anim.slide_in_right);
+    }
+
     public static void getMissingStudents() {
 
         getStudentsArray();
 
         studentsAdpter= new RVAdapter(missingStudents, "Add");
         mRecyclerView.setAdapter(studentsAdpter);
+        if(missingStudents.size() == 0)
+        {
+            tvInfo.setVisibility(View.VISIBLE);
+        }
+        ivLoading.setVisibility(View.INVISIBLE);
     }
 
     public static void getStudentsArray(){

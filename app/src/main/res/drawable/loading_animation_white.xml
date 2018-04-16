@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animation-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@drawable/b_0" android:duration="35"></item>
+    <item android:drawable="@drawable/b_1" android:duration="35"></item>
+    <item android:drawable="@drawable/b_2" android:duration="35"></item>
+    <item android:drawable="@drawable/b_3" android:duration="35"></item>
+    <item android:drawable="@drawable/b_4" android:duration="35"></item>
+    <item android:drawable="@drawable/b_5" android:duration="35"></item>
+    <item android:drawable="@drawable/b_6" android:duration="35"></item>
+    <item android:drawable="@drawable/b_7" android:duration="35"></item>
+    <item android:drawable="@drawable/b_8" android:duration="35"></item>
+    <item android:drawable="@drawable/b_9" android:duration="35"></item>
+    <item android:drawable="@drawable/b_10" android:duration="35"></item>
+    <item android:drawable="@drawable/b_11" android:duration="35"></item>
+    <item android:drawable="@drawable/b_12" android:duration="35"></item>
+    <item android:drawable="@drawable/b_13" android:duration="35"></item>
+    <item android:drawable="@drawable/b_14" android:duration="35"></item>
+    <item android:drawable="@drawable/b_15" android:duration="35"></item>
+    <item android:drawable="@drawable/b_16" android:duration="35"></item>
+    <item android:drawable="@drawable/b_17" android:duration="35"></item>
+    <item android:drawable="@drawable/b_18" android:duration="35"></item>
+    <item android:drawable="@drawable/b_19" android:duration="35"></item>
+    <item android:drawable="@drawable/b_20" android:duration="35"></item>
+    <item android:drawable="@drawable/b_21" android:duration="35"></item>
+    <item android:drawable="@drawable/b_22" android:duration="35"></item>
+    <item android:drawable="@drawable/b_23" android:duration="35"></item>
+    <item android:drawable="@drawable/b_24" android:duration="35"></item>
+    <item android:drawable="@drawable/b_25" android:duration="35"></item>
+    <item android:drawable="@drawable/b_26" android:duration="35"></item>
+    <item android:drawable="@drawable/b_27" android:duration="35"></item>
+    <item android:drawable="@drawable/b_28" android:duration="35"></item>
+    <item android:drawable="@drawable/b_29" android:duration="35"></item>
+</animation-list>

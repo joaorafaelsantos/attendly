@@ -1,5 +1,6 @@
 package pt.attendly.attendly;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -8,7 +9,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +35,7 @@ public class HistoryActivity extends AppCompatActivity {
                 case R.id.navigation_home:
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
+                    overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
 
                     return true;
                 case R.id.navigation_historic:
@@ -41,6 +45,7 @@ public class HistoryActivity extends AppCompatActivity {
                 case R.id.navigation_profile:
                     Intent intent2 = new Intent(getApplicationContext(), ProfileActivity.class);
                     startActivity(intent2);
+                    overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
 
                     return true;
             }
@@ -79,6 +84,7 @@ public class HistoryActivity extends AppCompatActivity {
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(this );
         mRecyclerView.setLayoutManager(mLayoutManager);
+
     }
 
     public static void showHistory(){
@@ -128,4 +134,40 @@ public class HistoryActivity extends AppCompatActivity {
         txtAttendence.setText("Assiduidade: " + String.valueOf(attendance) + "%");
 
     }
+
+    //DISABLE BACK BUTTON PRESS TO PREVIOUS ACTIVITY
+    @Override
+    public void onBackPressed() {
+//        this.finishAffinity();
+    }
+
+    private float x1,x2;
+    static final int MIN_DISTANCE = 150;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        switch(event.getAction())
+        {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE)
+                {
+                    if(x1>x2)
+                    {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(intent);
+                        overridePendingTransition(R.anim.slide_out_right, R.anim.slide_in_left);
+                    }
+
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
+    }
+
 }
