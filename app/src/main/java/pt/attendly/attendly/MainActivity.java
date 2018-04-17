@@ -72,6 +72,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     static ImageView ivLogoPresence;
     static TextView txtEstado;
 
+    boolean btActive = false;
+
     static Button btnManageClass;
 
     static ArrayList<Card> cards = new ArrayList<>();
@@ -82,6 +84,8 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
     static boolean subjectExists = false, noClass = false;
 
     Context context = this;
+
+    private static boolean firstEntry = true;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -139,29 +143,50 @@ public class MainActivity extends AppCompatActivity implements BeaconConsumer {
 
         manageData.getMainActivityData();
 
+        android.util.Log.d("ONCREATEXPTO", String.valueOf(firstEntry));
+
+
         beaconManager = BeaconManager.getInstanceForApplication(this);
         // To detect proprietary beacons, you must add a line like below corresponding to your beacon
         // type.  Do a web search for "setBeaconLayout" to get the proper expression.
         beaconManager.getBeaconParsers().add(new BeaconParser().
                 setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
-        beaconManager.bind(this);
 
 
+        android.util.Log.d("ONCREATEXPTO", String.valueOf(firstEntry));
+        if (firstEntry == true) {
+            bindBT();
+            firstEntry = false;
+        }
     }
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        beaconManager.unbind(this);
+        unbindBT();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        unbindBT();
     }
 
     private void unbindBT() {
-        beaconManager.unbind(this);
+        if (btActive == true) {
+            beaconManager.unbind(this);
+            btActive = false;
+        }
+
     }
 
     private void bindBT() {
-        beaconManager.bind(this);
+        if (btActive == false) {
+            beaconManager.bind(this);
+            btActive = true;
+        }
+
     }
 
     public static boolean checkIfTimeOfClass(String classBegining, String classEnd) {
